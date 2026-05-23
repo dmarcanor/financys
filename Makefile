@@ -12,3 +12,7 @@ migrate:
 
 seed:
 	docker compose exec php php artisan db:seed
+
+test:
+	docker compose exec php ./vendor/bin/pest
+
