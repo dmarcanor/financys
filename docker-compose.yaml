@@ -1,0 +1,79 @@
+services:
+  php:
+    build: 
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        DEV_UID: ${HOST_UID}
+        DEV_GID: ${HOST_GID}
+    container_name: php
+    working_dir: /var/www/html
+    restart: always
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 9000:9000
+    networks:
+      - financys
+    environment:
+      TZ: America/Caracas
+  
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    working_dir: /var/www/html
+    restart: always
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - 8000:80
+    networks:
+      - financys
+    depends_on:
+      - php
+
+  postgres:
+    image: postgres:18.3-alpine
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    networks:
+      - financys
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-pguser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_DB: ${DB_DATABASE:-app_db}
+      TZ: America/Caracas
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=es_VE.utf8 --data-checksums"
+    volumes:
+      - financys_postgres_data:/var/lib/postgresql:rw
+      - ./docker/postgres/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE} -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+  
+  redis:
+    image: redis:8.6.2-alpine
+    container_name: redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - financys_redis_data:/data
+    ports:
+      - 6379:6379
+    networks:
+      - financys
+    
+volumes:
+  financys_postgres_data:
+    external: true
+  financys_redis_data:
+    external: true
+
+networks:
+  financys:
