@@ -1,28 +1,48 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ApiController;
 use Auth;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
-class LoginPostController extends AuthController
+class LoginPostController extends ApiController
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
-        $credentials = $request->validate([
-            "email"=> "required|email",
-            "password"=> "required",
-        ]);
+        try{
+            $credentials = $request->validate([
+                "email"=> "required|email",
+                "password"=> "required",
+            ]);
 
-        $token = Auth::attempt($credentials);
+            $token = Auth::attempt($credentials);
 
-        dd('token', $token);
+            if (!$token) {
+                return $this->formatResponse(
+                    [],
+                    ['Unauthorized'],
+                    JsonResponse::HTTP_UNAUTHORIZED
+                );
+            }
 
-        if (!$token) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return $this->formatResponse(
+                [
+                    'access_token' => $token,
+                    'token_type'   => 'bearer',
+                    'expires_in'   => auth()->factory()->getTTL() * 60
+                ],
+                [],
+                JsonResponse::HTTP_OK
+            );
+        } catch(ValidationException $e){  
+            return $this->formatResponse(
+                [],
+                $e->validator->getMessageBag()->getMessages(),
+                JsonResponse::HTTP_BAD_REQUEST
+            );
         }
-
-        return $this->respondWithToken($token);
     }
 }
