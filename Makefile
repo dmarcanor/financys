@@ -10,6 +10,9 @@ install:
 migrate:
 	docker compose exec php php artisan migrate
 
+rollback:
+	docker compose exec php php artisan migrate:rollback
+
 seed:
 	docker compose exec php php artisan db:seed
 

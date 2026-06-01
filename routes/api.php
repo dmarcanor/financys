@@ -1,12 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginPostController;
-use Illuminate\Support\Facades\Route;
+declare(strict_types = 1);
 
-// non-authenticated routes
-Route::post('login', [LoginPostController::class, '__invoke']);
-
-// authenticated routes
-Route::prefix('api')->group(function () {
-    require_once __DIR__.'/auth/routes.php';
-})->middleware('jwt.auth');
+// Financys API routes
+require __DIR__.'/financys/routes.php';

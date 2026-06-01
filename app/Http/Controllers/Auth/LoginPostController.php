@@ -6,13 +6,12 @@ use App\Http\Controllers\ApiController;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class LoginPostController extends ApiController
 {
     public function __invoke(Request $request): JsonResponse
     {
-        try{
+        return $this->validate($request, function () use ($request) {
             $credentials = $request->validate([
                 "email"=> "required|email",
                 "password"=> "required",
@@ -37,12 +36,6 @@ class LoginPostController extends ApiController
                 [],
                 JsonResponse::HTTP_OK
             );
-        } catch(ValidationException $e){  
-            return $this->formatResponse(
-                [],
-                $e->validator->getMessageBag()->getMessages(),
-                JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
+        });
     }
 }
