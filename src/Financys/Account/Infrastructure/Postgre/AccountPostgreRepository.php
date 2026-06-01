@@ -14,8 +14,15 @@ class AccountPostgreRepository implements AccountRepository
 
     public function create(Account $account): void
     {
-        DB::transaction(function () use ($account) {
-            $t = DB::statement("INSERT INTO accounts (id, user_id, name, balance, currency) VALUES ('{$account->id()}', '{$account->userId()}', '{$account->name()}', {$account->balance()}, '{$account->currency()}');");
-            });
+        DB::table('accounts')
+            ->insert([
+                'id' => $account->id(),
+                'user_id' => $account->userId(),
+                'name' => $account->name(),
+                'balance' => $account->balance()->amount(),
+                'currency' => $account->balance()->symbol(),
+                'created_at' => now(),
+                'updated_at'=> now(),
+            ]);
     }
 }

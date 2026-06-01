@@ -5,7 +5,13 @@ declare(strict_types = 1);
 namespace Financys\Account\Application\Creator;
 
 use Financys\Account\Domain\Account;
+use Financys\Account\Domain\AccountBalance;
+use Financys\Account\Domain\AccountName;
 use Financys\Account\Domain\AccountRepository;
+use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
+use Shared\Domain\Symbols;
+use Shared\Domain\Uuid;
+use ValueError;
 
 final class AccountCreator
 {
@@ -15,13 +21,19 @@ final class AccountCreator
 
     public function __invoke(AccountCreatorRequest $request): void
     {
-        $account = new Account(
-            $request->id,
-            $request->userId,
-            $request->name,
-            $request->balance,
-            $request->currency
-        );
+        try {
+            $account = new Account(
+                new Uuid($request->id),
+                new Uuid($request->userId),
+                new AccountName($request->name),
+                new AccountBalance(Symbols::from($request->currency), $request->balance)
+            );
+        } catch (ValueError $e) {
+            throw new InvalidAccountBalanceSymbolException(
+                sprintf('The account balance symbol %s is not valid.', $request->currency)
+            );
+        }
+        
 
         $this->repository->create($account);
     }

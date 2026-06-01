@@ -16,14 +16,12 @@ final class AccountCreatorRequestMother
         ?string $currency = null
     ): AccountCreatorRequest
     {
-        $faker = \Faker\Factory::create();
-
         return new AccountCreatorRequest(
-            $id ?? $faker->uuid,
-            $userId ?? $faker->uuid(),
-            $name ?? $faker->name(),
-            $balance ?? $faker->randomFloat(),
-            $currency ?? $faker->currencyCode(),
+            $id ?? fake()->uuid,
+            $userId ?? fake()->uuid(),
+            $name ?? fake()->name(),
+            $balance ?? fake()->randomFloat(),
+            $currency ?? fake()->randomElement(['bs', 'usd']),
         );
     }
 }

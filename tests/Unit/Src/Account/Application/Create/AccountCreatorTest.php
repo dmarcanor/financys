@@ -7,6 +7,7 @@ namespace Tests\Unit\Src\Account\Application\Create;
 use Financys\Account\Application\Creator\AccountCreator;
 use Financys\Account\Domain\Account;
 use Financys\Account\Domain\AccountRepository;
+use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
 use Tests\TestCase;
 use Tests\Unit\Src\Account\Domain\AccountMother;
 
@@ -30,6 +31,22 @@ final class AccountCreatorTest extends TestCase
                 serialize($a) === serialize($account)
             ))
             ->andReturn(null);
+
+        (new AccountCreator($repository))($request);
+    }
+
+    public function test_it_should_throw_invalid_symbol_error(): void
+    {   
+        $request = AccountCreatorRequestMother::create(
+            currency: 'non-exist'
+        );
+
+        $this->expectException(InvalidAccountBalanceSymbolException::class);
+        $this->expectExceptionMessage(
+            'The account balance symbol non-exist is not valid.'
+        );
+
+        $repository = mock(AccountRepository::class);
 
         (new AccountCreator($repository))($request);
     }

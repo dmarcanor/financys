@@ -5,6 +5,10 @@ declare(strict_types = 1);
 namespace Tests\Unit\Src\Account\Domain;
 
 use Financys\Account\Domain\Account;
+use Financys\Account\Domain\AccountBalance;
+use Financys\Account\Domain\AccountName;
+use Shared\Domain\Symbols;
+use Shared\Domain\Uuid;
 
 class AccountMother
 {
@@ -19,11 +23,13 @@ class AccountMother
         $faker = \Faker\Factory::create();
 
         return new Account(
-            $id ?? $faker->uuid,
-            $userId ?? $faker->uuid(),
-            $name ?? $faker->name(),
-            $balance ?? $faker->randomFloat(),
-            $currency ?? $faker->currencyCode(),
+            new Uuid($id ?? fake()->uuid),
+            new Uuid($userId ?? fake()->uuid()),
+            new AccountName($name ?? fake()->name()),
+            new AccountBalance(
+                Symbols::from($currency ?? fake()->randomElement(['bs', 'usd'])),
+                $balance ?? fake()->randomFloat()
+            )
         );
     }
 }
