@@ -14,6 +14,11 @@ class Uuid
         }
     }
 
+    public static function generate(): self
+    {
+        return new self(RamseyUuid::uuid4()->toString());
+    }
+
     public function value(): string
     {
         return $this->uuid;
