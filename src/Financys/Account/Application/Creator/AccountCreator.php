@@ -22,7 +22,7 @@ final class AccountCreator
     public function __invoke(AccountCreatorRequest $request): void
     {
         try {
-            $account = new Account(
+            $account = Account::create(
                 new Uuid($request->id),
                 new Uuid($request->userId),
                 new AccountName($request->name),
@@ -33,7 +33,6 @@ final class AccountCreator
                 sprintf('The account balance symbol %s is not valid.', $request->currency)
             );
         }
-        
 
         $this->repository->create($account);
     }
