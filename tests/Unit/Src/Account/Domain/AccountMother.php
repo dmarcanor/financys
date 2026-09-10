@@ -22,7 +22,7 @@ class AccountMother
     {
         $faker = \Faker\Factory::create();
 
-        return new Account(
+        return Account::create(
             new Uuid($id ?? fake()->uuid),
             new Uuid($userId ?? fake()->uuid()),
             new AccountName($name ?? fake()->name()),
