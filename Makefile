@@ -7,6 +7,12 @@ down:
 install:
 	docker run --rm -w /app -v ${PWD}:/app composer composer install
 
+generate-laravel-key:
+	docker compose exec php php artisan key:generate
+
+generate-jwt-secret:
+	docker compose exec php php artisan jwt:secret
+
 migrate:
 	docker compose exec php php artisan migrate
 
