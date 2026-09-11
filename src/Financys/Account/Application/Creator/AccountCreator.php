@@ -26,9 +26,9 @@ final class AccountCreator
                 new Uuid($request->id),
                 new Uuid($request->userId),
                 new AccountName($request->name),
-                new AccountBalance(Symbols::from($request->currency), $request->balance)
+                AccountBalance::create(Symbols::from($request->currency), $request->balance)
             );
-        } catch (ValueError $e) {
+        } catch (ValueError) {
             throw new InvalidAccountBalanceSymbolException(
                 sprintf('The account balance symbol %s is not valid.', $request->currency)
             );

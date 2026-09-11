@@ -10,15 +10,15 @@ use Shared\Domain\Symbols;
 
 final class AccountBalance extends Currency
 {
-    public function __construct(
-        protected Symbols $symbol,
-        protected float $amount
-    ) {
-        parent::__construct($symbol, $amount);
-        
-        if ($this->isNegative()) {
-            throw new NegativeCurrency(sprintf("The account balance %f %s can't be negative ", $amount, $symbol));
+    public static function create(Symbols $symbol, float $amount): self
+    {
+        $accountBalance = new self($symbol, $amount);
+
+        if ($accountBalance->isNegative()) {
+            throw new NegativeCurrency(sprintf("The account balance %f %s can't be negative", $amount, $symbol->value));
         }
+
+        return $accountBalance;
     }
 
     public function symbol(): string
