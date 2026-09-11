@@ -20,6 +20,7 @@ class AccountPostController extends ApiController
             $account = $request->validate([
                 'id' => 'required',
                 'userId' => 'required|exists:users,id',
+                'code' => 'required',
                 'name' => 'required',
                 'balance' => 'required|numeric|min:0',
                 'currency' => 'required',
@@ -28,6 +29,7 @@ class AccountPostController extends ApiController
             ($this->accountCreator)(new AccountCreatorRequest(
                 $account['id'],
                 $account['userId'],
+                $account['code'],
                 $account['name'],
                 $account['balance'],
                 $account['currency'],
