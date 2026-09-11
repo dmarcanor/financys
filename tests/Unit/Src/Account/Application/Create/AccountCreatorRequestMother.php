@@ -11,6 +11,7 @@ final class AccountCreatorRequestMother
     public static function create(
         ?string $id = null,
         ?string $userId = null,
+        ?string $code = null,
         ?string $name = null,
         ?float $balance = null,
         ?string $currency = null
@@ -19,6 +20,7 @@ final class AccountCreatorRequestMother
         return new AccountCreatorRequest(
             $id ?? fake()->uuid,
             $userId ?? fake()->uuid(),
+            $code ?? fake()->word(),
             $name ?? fake()->name(),
             $balance ?? fake()->randomFloat(),
             $currency ?? fake()->randomElement(['bs', 'usd']),

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Tests\Unit\Src\Account\Application\Create;
 
 use Financys\Account\Application\Creator\AccountCreator;
+use Financys\Account\Domain\AccountEmptyCode;
 use Financys\Account\Domain\AccountEmptyName;
 use Financys\Account\Domain\AccountRepository;
 use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
@@ -21,6 +22,7 @@ final class AccountCreatorTest extends TestCase
         $expected = AccountMother::create(
             $request->id,
             $request->userId,
+            $request->code,
             $request->name,
             $request->balance,
             $request->currency
@@ -103,6 +105,20 @@ final class AccountCreatorTest extends TestCase
 
         $this->expectException(NegativeCurrency::class);
         $this->expectExceptionMessage("The account balance -100.000000 usd can't be negative");
+
+        $repository = mock(AccountRepository::class);
+
+        (new AccountCreator($repository))($request);
+    }
+
+    public function test_it_should_throw_empty_code_exception(): void
+    {
+        $request = AccountCreatorRequestMother::create(
+            code: ''
+        );
+
+        $this->expectException(AccountEmptyCode::class);
+        $this->expectExceptionMessage("The account code can't be empty");
 
         $repository = mock(AccountRepository::class);
 

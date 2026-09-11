@@ -24,6 +24,7 @@ class AccountPostControllerTest extends TestCase
             ->post('api/account', [
                 'id' => fake()->uuid(),
                 'userId' => $user->id,
+                'code' => fake()->word(),
                 'name' => fake()->name(),
                 'balance' => fake()->randomFloat(),
                 'currency' => fake()->randomElement(['bs', 'usd']),
