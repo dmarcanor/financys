@@ -18,6 +18,7 @@ class AccountPostgreRepository implements AccountRepository
             ->insert([
                 'id' => $account->id(),
                 'user_id' => $account->userId(),
+                'code' => $account->code(),
                 'name' => $account->name(),
                 'balance' => $account->balance()->amount(),
                 'currency' => $account->balance()->symbol(),
