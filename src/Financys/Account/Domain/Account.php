@@ -12,6 +12,7 @@ final class Account extends Aggregate
     public function __construct(
         private Uuid $id,
         private Uuid $userId,
+        private AccountCode $code,
         private AccountName $name,
         private AccountBalance $balance
     ) {}
@@ -19,6 +20,7 @@ final class Account extends Aggregate
     public static function create(
         Uuid $id,
         Uuid $userId,
+        AccountCode $code,
         AccountName $name,
         AccountBalance $balance
     ): self
@@ -26,6 +28,7 @@ final class Account extends Aggregate
         $account = new self(
             $id,
             $userId,
+            $code,
             $name,
             $balance
         );
@@ -35,6 +38,7 @@ final class Account extends Aggregate
             [
                 'id' => $account->id(),
                 'userId' => $account->userId(),
+                'code' => $account->code(),
                 'name' => $account->name(),
                 'balance' => [
                     'symbol' => $account->balance()->symbol(),
@@ -54,6 +58,11 @@ final class Account extends Aggregate
     public function userId(): string
     {
         return $this->userId->value();
+    }
+
+    public function code(): string
+    {
+        return $this->code->value();
     }
 
     public function name(): string

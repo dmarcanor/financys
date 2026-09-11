@@ -6,6 +6,7 @@ namespace Financys\Account\Application\Creator;
 
 use Financys\Account\Domain\Account;
 use Financys\Account\Domain\AccountBalance;
+use Financys\Account\Domain\AccountCode;
 use Financys\Account\Domain\AccountName;
 use Financys\Account\Domain\AccountRepository;
 use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
@@ -25,6 +26,7 @@ final class AccountCreator
             $account = Account::create(
                 new Uuid($request->id),
                 new Uuid($request->userId),
+                new AccountCode($request->code),
                 new AccountName($request->name),
                 AccountBalance::create(Symbols::from($request->currency), $request->balance)
             );
