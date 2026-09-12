@@ -6,6 +6,11 @@ ARG DEV_GID=1000
 RUN apk add --no-cache su-exec shadow bash postgresql-dev \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
+RUN apk add --no-cache $PHPIZE_DEPS \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del $PHPIZE_DEPS
+
 # Set PHP timezone and charset
 RUN echo "date.timezone = America/Caracas" > /usr/local/etc/php/conf.d/timezone.ini \
     && echo "default_charset = \"UTF-8\"" >> /usr/local/etc/php/conf.d/charset.ini
