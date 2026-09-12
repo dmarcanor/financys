@@ -27,6 +27,7 @@ class AccountGetControllerTest extends TestCase
         $this
             ->withHeaders([
                 'Authorization' => "Bearer $token",
+                'Idempotency-Key' => fake()->uuid(),
             ])
             ->post('api/account', [
                 'id' => $accountId,
@@ -73,6 +74,7 @@ class AccountGetControllerTest extends TestCase
         $this
             ->withHeaders([
                 'Authorization' => "Bearer $token",
+                'Idempotency-Key' => fake()->uuid(),
             ])
             ->post('api/account', [
                 'id' => $accountId,
