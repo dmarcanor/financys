@@ -6,4 +6,4 @@ use App\Http\Controllers\Auth\LoginPostController;
 use Illuminate\Support\Facades\Route;
 
 // non-authenticated routes
-Route::post('login', [LoginPostController::class, '__invoke']);
+Route::post('login', LoginPostController::class);

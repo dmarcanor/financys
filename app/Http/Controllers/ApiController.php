@@ -8,7 +8,7 @@ use Illuminate\Validation\ValidationException;
 
 class ApiController
 {
-    protected function validate(Request $request, callable $fun): JsonResponse
+    protected function validate(callable $fun): JsonResponse
     {
         try {
             return $fun();

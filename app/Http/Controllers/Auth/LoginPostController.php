@@ -11,10 +11,10 @@ class LoginPostController extends ApiController
 {
     public function __invoke(Request $request): JsonResponse
     {
-        return $this->validate($request, function () use ($request) {
+        return $this->validate(function () use ($request) {
             $credentials = $request->validate([
-                "email"=> "required|email",
-                "password"=> "required",
+                "email" => "required|email",
+                "password" => "required",
             ]);
 
             $token = Auth::attempt($credentials);
