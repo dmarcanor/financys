@@ -33,8 +33,7 @@ class AccountPostgreRepository implements AccountRepository
     public function find(string $id): ?Account
     {
         $account = DB::table('accounts')
-            ->where('id', $id)
-            ->first();
+            ->find($id);
 
         if ($account === null) {
             return null;
@@ -47,7 +46,7 @@ class AccountPostgreRepository implements AccountRepository
             new AccountName($account->name),
             new AccountBalance(
                 Symbols::from($account->currency),
-                $account->balance,
+                (string )$account->balance,
             )
         );
     }

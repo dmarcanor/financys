@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('user_id');
             $table->string('code');
             $table->string('name');
-            $table->decimal('balance');
+            $table->decimal('balance', 14, 8);
             $table->enum('currency', ['bs', 'usd']);
             $table->timestamps();
 
