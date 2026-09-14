@@ -10,9 +10,9 @@ abstract class TestCase extends BaseTestCase
 {
     protected function fakeAmount(): string
     {
-        return random_int(0, 999999999)
+        return fake()->randomNumber(9)
             . '.'
-            . str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
+            . str_pad((string) fake()->randomNumber(8), 8, '0', STR_PAD_LEFT);
     }
 
     protected function similarTo(object $expected): \Mockery\Matcher\Closure
