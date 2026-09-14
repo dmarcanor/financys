@@ -15,7 +15,7 @@ class Currency
         $this->amount = $this->normalizeAmount($amount);
     }
 
-    protected function isNegative(): bool
+    public function isNegative(): bool
     {
         return $this->amount[0] === '-';
     }
@@ -23,5 +23,15 @@ class Currency
     private function normalizeAmount(string $amount): string
     {
         return bcadd('0', $amount, self::DECIMAL_PLACES);
+    }
+
+    public function symbol(): string
+    {
+        return $this->symbol->value;
+    }
+
+    public function amount(): string
+    {
+        return $this->amount;
     }
 }
