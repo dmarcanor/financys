@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace Shared\Domain;
 
+use Brick\Math\BigDecimal;
+use Brick\Math\RoundingMode;
+
 class Currency
 {
     private const DECIMAL_PLACES = 8;
@@ -22,16 +25,7 @@ class Currency
 
     private function normalizeAmount(string $amount): string
     {
-        $negative = str_starts_with($amount, '-');
-
-        [$integer, $fraction] = array_pad(explode('.', ltrim($amount, '-+')), 2, '');
-
-        $integer = ltrim($integer, '0');
-
-        return ($negative ? '-' : '')
-            . ($integer === '' ? '0' : $integer)
-            . '.'
-            . str_pad(substr($fraction, 0, self::DECIMAL_PLACES), self::DECIMAL_PLACES, '0');
+        return BigDecimal::of($amount)->toScale(self::DECIMAL_PLACES, RoundingMode::Down)->__toString();
     }
 
     private function leftOfDecimal(string $amount): string
