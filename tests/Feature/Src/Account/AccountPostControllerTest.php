@@ -5,14 +5,14 @@ declare(strict_types = 1);
 namespace Tests\Feature\Src\Account;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Tests\Unit\Src\Account\Domain\AccountMother;
 
 class AccountPostControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     public function test_it_should_create_an_account()
     {
