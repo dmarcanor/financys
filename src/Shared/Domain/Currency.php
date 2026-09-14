@@ -17,16 +17,11 @@ class Currency
 
     protected function isNegative(): bool
     {
-        return $this->leftOfDecimal($this->amount) !== '0' && $this->amount[0] === '-';
+        return $this->amount[0] === '-';
     }
 
     private function normalizeAmount(string $amount): string
     {
         return bcadd('0', $amount, self::DECIMAL_PLACES);
-    }
-
-    private function leftOfDecimal(string $amount): string
-    {
-        return explode('.', ltrim($amount, '-+'))[0];
     }
 }
