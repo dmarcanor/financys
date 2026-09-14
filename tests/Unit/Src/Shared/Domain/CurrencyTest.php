@@ -11,11 +11,6 @@ use ValueError;
 
 class TestableCurrency extends Currency
 {
-    public function amount(): string
-    {
-        return $this->amount;
-    }
-
     public function isNegative(): bool
     {
         return parent::isNegative();
@@ -24,9 +19,14 @@ class TestableCurrency extends Currency
 
 class CurrencyTest extends TestCase
 {
-    private function currency(string $amount): TestableCurrency
+    private function currency(string $amount): Currency
     {
-        return new TestableCurrency(Symbols::USD, $amount);
+        return new Currency(Symbols::USD, $amount);
+    }
+
+    private function negative(string $amount): bool
+    {
+        return (new TestableCurrency(Symbols::USD, $amount))->isNegative();
     }
 
     public function test_it_should_pad_whole_number_to_eight_decimals(): void
@@ -84,25 +84,17 @@ class CurrencyTest extends TestCase
         expect($this->currency('-0')->amount())->toBe('0.00000000');
     }
 
-    public function test_is_negative_when_amount_is_negative(): void
+    public function test_it_should_detect_negative_amounts(): void
     {
-        expect($this->currency('-10')->isNegative())->toBeTrue();
+        expect($this->negative('-10'))->toBeTrue();
+        expect($this->negative('-0.001'))->toBeTrue();
     }
 
-    public function test_is_negative_for_negative_amount_with_zero_integer_part(): void
+    public function test_it_should_not_detect_zero_or_positive_as_negative(): void
     {
-        expect($this->currency('-0.001')->isNegative())->toBeTrue();
-    }
-
-    public function test_is_not_negative_when_amount_is_positive(): void
-    {
-        expect($this->currency('10')->isNegative())->toBeFalse();
-    }
-
-    public function test_is_not_negative_for_zero_or_negative_zero(): void
-    {
-        expect($this->currency('0')->isNegative())->toBeFalse();
-        expect($this->currency('-0')->isNegative())->toBeFalse();
+        expect($this->negative('10'))->toBeFalse();
+        expect($this->negative('0'))->toBeFalse();
+        expect($this->negative('-0'))->toBeFalse();
     }
 
     public function test_it_should_reject_malformed_amount(): void
