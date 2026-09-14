@@ -10,7 +10,7 @@ use Shared\Domain\Symbols;
 
 final class AccountBalance extends Currency
 {
-    public static function create(Symbols $symbol, float $amount): self
+    public static function create(Symbols $symbol, string $amount): self
     {
         $accountBalance = new self($symbol, $amount);
 
@@ -26,7 +26,7 @@ final class AccountBalance extends Currency
         return $this->symbol->value;
     }
 
-    public function amount(): float
+    public function amount(): string
     {
         return $this->amount;
     }

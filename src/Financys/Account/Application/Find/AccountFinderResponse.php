@@ -11,7 +11,7 @@ final class AccountFinderResponse
         public readonly string $userId,
         public readonly string $code,
         public readonly string $name,
-        public readonly float $balance,
+        public readonly string $balance,
         public readonly string $currency,
     ) {}
 }
