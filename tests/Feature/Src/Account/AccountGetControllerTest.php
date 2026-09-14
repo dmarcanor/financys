@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Financys\Account\Application\Creator;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class AccountGetControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     public function test_it_should_get_an_account()
     {
@@ -54,6 +54,39 @@ class AccountGetControllerTest extends TestCase
             'balance' => $accountBalance,
             'currency' => $accountCurrency,
         ]);
+        expect($response->status())->toBe(200);
+    }
+
+    public function test_it_should_preserve_large_balance_precision()
+    {
+        $user = User::factory()->create();
+        $token = auth()->login($user);
+
+        $accountId = fake()->uuid();
+        $accountBalance = '128492179.16945100';
+
+        $this
+            ->withHeaders([
+                'Authorization' => "Bearer $token",
+                'Idempotency-Key' => fake()->uuid(),
+            ])
+            ->post('api/account', [
+                'id' => $accountId,
+                'code' => fake()->word(),
+                'name' => fake()->name(),
+                'balance' => $accountBalance,
+                'currency' => 'usd',
+            ]);
+
+        $response = $this
+            ->withHeaders([
+                'Authorization' => "Bearer $token",
+            ])
+            ->get("api/account/$accountId");
+
+        $json = $response->json();
+
+        expect($json['body']['balance'])->toBe($accountBalance);
         expect($response->status())->toBe(200);
     }
 
@@ -105,7 +138,7 @@ class AccountGetControllerTest extends TestCase
         $user = User::factory()->create();
         $token = auth()->login($user);
         
-        $accountId = 'non-existent-account-id';
+        $accountId = fake()->uuid();
 
         $response = $this
             ->withHeaders([
