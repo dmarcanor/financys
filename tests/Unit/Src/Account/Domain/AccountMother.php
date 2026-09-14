@@ -31,7 +31,7 @@ class AccountMother
             new AccountName($name ?? fake()->name()),
             new AccountBalance(
                 Symbols::from($currency ?? fake()->randomElement(['bs', 'usd'])),
-                $balance ?? (string) fake()->randomFloat(nbMaxDecimals: 8)
+                $balance ?? random_int(0, 999999999) . '.' . str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT)
             )
         );
     }

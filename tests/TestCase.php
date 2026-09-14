@@ -8,9 +8,11 @@ use Shared\Domain\Aggregate;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function fakeAmount($nbMaxDecimals = null, $min = 0, $max = null): string
+    protected function fakeAmount(): string
     {
-        return number_format(fake()->randomFloat($nbMaxDecimals, $min, $max), 8, '.', '');
+        return random_int(0, 999999999)
+            . '.'
+            . str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
     }
 
     protected function similarTo(object $expected): \Mockery\Matcher\Closure
