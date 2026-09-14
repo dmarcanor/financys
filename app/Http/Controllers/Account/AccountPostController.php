@@ -40,17 +40,16 @@ class AccountPostController extends ApiController
 
         return $this->validate(function () use ($request, $idempotencyKey) {
             $account = $request->validate([
-                'id' => 'required',
-                'userId' => 'required|exists:users,id',
+                'id' => 'required|unique:accounts,id',
                 'code' => 'required',
                 'name' => 'required',
-                'balance' => 'required|numeric|min:0',
+                'balance' => 'required|numeric|min:0|decimal:8,8',
                 'currency' => 'required',
             ]);
 
             ($this->accountCreator)(new AccountCreatorRequest(
                 $account['id'],
-                $account['userId'],
+                auth()->user()->id,
                 $account['code'],
                 $account['name'],
                 $account['balance'],
