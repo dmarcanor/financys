@@ -89,6 +89,11 @@ class CurrencyTest extends TestCase
         expect($this->currency('-10')->isNegative())->toBeTrue();
     }
 
+    public function test_is_negative_for_negative_amount_with_zero_integer_part(): void
+    {
+        expect($this->currency('-0.001')->isNegative())->toBeTrue();
+    }
+
     public function test_is_not_negative_when_amount_is_positive(): void
     {
         expect($this->currency('10')->isNegative())->toBeFalse();

@@ -35,6 +35,13 @@ class AccountBalanceTest extends TestCase
         AccountBalance::create(Symbols::USD, '-100');
     }
 
+    public function test_it_should_throw_negative_currency_for_negative_sub_unit_balance(): void
+    {
+        $this->expectException(NegativeCurrency::class);
+
+        AccountBalance::create(Symbols::USD, '-0.001');
+    }
+
     public function test_it_should_not_throw_when_negative_zero(): void
     {
         $balance = AccountBalance::create(Symbols::USD, '-0');
