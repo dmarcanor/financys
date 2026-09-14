@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Src\Shared\Domain;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Shared\Domain\Currency;
 use Shared\Domain\Symbols;
 use Tests\TestCase;
@@ -12,19 +11,68 @@ use ValueError;
 
 class CurrencyTest extends TestCase
 {
-    #[DataProvider('normalizationCases')]
-    public function test_it_should_normalize_amount(string $input, string $expected): void
+    public function test_it_should_pad_whole_number_to_eight_decimals(): void
     {
-        expect((new Currency(Symbols::USD, $input))->amount())->toBe($expected);
+        expect((new Currency(Symbols::USD, '5'))->amount())->toBe('5.00000000');
     }
 
-    public function test_is_negative_when_amount_is_negative(): void
+    public function test_it_should_pad_short_fraction_to_eight_decimals(): void
+    {
+        expect((new Currency(Symbols::USD, '5.1'))->amount())->toBe('5.10000000');
+    }
+
+    public function test_it_should_keep_exactly_eight_decimals(): void
+    {
+        expect((new Currency(Symbols::USD, '5.12345678'))->amount())->toBe('5.12345678');
+    }
+
+    public function test_it_should_truncate_more_than_eight_decimals(): void
+    {
+        expect((new Currency(Symbols::USD, '5.123456789'))->amount())->toBe('5.12345678');
+    }
+
+    public function test_it_should_truncate_negative_amounts_towards_zero(): void
+    {
+        expect((new Currency(Symbols::USD, '-5.123456789'))->amount())->toBe('-5.12345678');
+    }
+
+    public function test_it_should_clean_leading_zeros(): void
+    {
+        expect((new Currency(Symbols::USD, '0005'))->amount())->toBe('5.00000000');
+    }
+
+    public function test_it_should_normalize_trailing_dot_notation(): void
+    {
+        expect((new Currency(Symbols::USD, '5.'))->amount())->toBe('5.00000000');
+    }
+
+    public function test_it_should_normalize_amount_without_integer_part(): void
+    {
+        expect((new Currency(Symbols::USD, '.5'))->amount())->toBe('0.50000000');
+    }
+
+    public function test_it_should_normalize_plus_signed_amount(): void
+    {
+        expect((new Currency(Symbols::USD, '+5'))->amount())->toBe('5.00000000');
+    }
+
+    public function test_it_should_truncate_to_zero(): void
+    {
+        expect((new Currency(Symbols::USD, '0.000000005'))->amount())->toBe('0.00000000');
+    }
+
+    public function test_it_should_treat_negative_zero_as_zero(): void
+    {
+        expect((new Currency(Symbols::USD, '-0'))->amount())->toBe('0.00000000');
+    }
+
+    public function test_it_should_detect_negative_amounts(): void
     {
         expect((new Currency(Symbols::USD, '-10'))->isNegative())->toBeTrue();
         expect((new Currency(Symbols::USD, '-0.001'))->isNegative())->toBeTrue();
     }
 
-    public function test_is_not_negative_for_zero_or_positive_amounts(): void
+    public function test_it_should_not_detect_zero_or_positive_as_negative(): void
     {
         expect((new Currency(Symbols::USD, '10'))->isNegative())->toBeFalse();
         expect((new Currency(Symbols::USD, '0'))->isNegative())->toBeFalse();
@@ -36,22 +84,5 @@ class CurrencyTest extends TestCase
         $this->expectException(ValueError::class);
 
         new Currency(Symbols::USD, 'abc');
-    }
-
-    public static function normalizationCases(): array
-    {
-        return [
-            'whole number' => ['5', '5.00000000'],
-            'short fraction' => ['5.1', '5.10000000'],
-            'exact eight decimals' => ['5.12345678', '5.12345678'],
-            'more than eight decimals' => ['5.123456789', '5.12345678'],
-            'negative truncated towards zero' => ['-5.123456789', '-5.12345678'],
-            'leading zeros' => ['0005', '5.00000000'],
-            'trailing dot' => ['5.', '5.00000000'],
-            'missing integer part' => ['.5', '0.50000000'],
-            'plus sign' => ['+5', '5.00000000'],
-            'truncated to zero' => ['0.000000005', '0.00000000'],
-            'negative zero' => ['-0', '0.00000000'],
-        ];
     }
 }
