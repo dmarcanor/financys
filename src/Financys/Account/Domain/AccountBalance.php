@@ -20,14 +20,4 @@ final class AccountBalance extends Currency
 
         return $accountBalance;
     }
-
-    public function symbol(): string
-    {
-        return $this->symbol->value;
-    }
-
-    public function amount(): string
-    {
-        return $this->amount;
-    }
 }
