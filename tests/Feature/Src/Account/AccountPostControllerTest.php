@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Tests\Feature\Src\Account;
 
 use App\Models\User;
-use Financys\Account\Domain\AccountRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -27,10 +26,9 @@ class AccountPostControllerTest extends TestCase
             ])
             ->post('api/account', [
                 'id' => fake()->uuid(),
-                'userId' => $user->id,
                 'code' => fake()->word(),
                 'name' => fake()->name(),
-                'balance' => fake()->randomFloat(),
+                'balance' => $this->fakeAmount(),
                 'currency' => fake()->randomElement(['bs', 'usd']),
             ]);
 
@@ -45,7 +43,7 @@ class AccountPostControllerTest extends TestCase
         $response = $this->post('api/account', [
             'id' => fake()->uuid(),
             'name' => fake()->name(),
-            'balance' => fake()->randomFloat(),
+            'balance' => $this->fakeAmount(),
             'currency' => fake()->randomElement(['bs', 'usd']),
         ]);
 
@@ -67,7 +65,7 @@ class AccountPostControllerTest extends TestCase
             ->post('api/account', [
                 'id' => fake()->uuid(),
                 'name' => fake()->name(),
-                'balance' => fake()->randomFloat(),
+                'balance' => $this->fakeAmount(),
                 'currency' => fake()->randomElement(['bs', 'usd']),
             ]);
 
@@ -90,10 +88,9 @@ class AccountPostControllerTest extends TestCase
             ])
             ->post('api/account', [
                 'id' => fake()->uuid(),
-                'userId' => $user->id,
                 'code' => fake()->word(),
                 'name' => fake()->name(),
-                'balance' => fake()->randomFloat(),
+                'balance' => $this->fakeAmount(),
                 'currency' => fake()->randomElement(['bs', 'usd']),
             ]);
 
@@ -103,6 +100,48 @@ class AccountPostControllerTest extends TestCase
         expect($json)->toHaveKeys(['error', 'body']);
         expect($json['body'])->toBe([]);
         expect($json['error'])->toBe(['Idempotency-Key header is required.']);
+    }
+
+    public function test_it_should_create_two_account_because_different_idempotency_key()
+    {
+        $user = User::factory()->create();
+        $token = auth()->login($user);
+        $idempotencyKey1 = 'test-idempotency-key-1';
+        $idempotencyKey2 = 'test-idempotency-key-2';
+
+        $account = AccountMother::create(userId: $user->id);
+
+        $this
+            ->withHeaders([
+                'Authorization' => "Bearer $token",
+                'Idempotency-Key' => $idempotencyKey1,
+            ])
+            ->post('api/account', [
+                'id' => $account->id(),
+                'code' => $account->code(),
+                'name' => $account->name(),
+                'balance' => $this->fakeAmount(),
+                'currency' => $account->balance()->symbol(),
+            ]);
+
+        $this
+            ->withHeaders([
+                'Authorization' => "Bearer $token",
+                'Idempotency-Key' => $idempotencyKey2,
+            ])
+            ->post('api/account', [
+                'id' => $account->id(),
+                'userId' => $account->userId(),
+                'code' => $account->code(),
+                'name' => $account->name(),
+                'balance' => (string) $account->balance()->amount(),
+                'currency' => $account->balance()->symbol(),
+            ]);
+
+        
+        $accounts = DB::table('accounts')->get();
+
+        expect($accounts->count())->toBe(1);
     }
 
     public function test_it_should_create_one_account_because_same_idempotency_key()
@@ -121,10 +160,9 @@ class AccountPostControllerTest extends TestCase
             ])
             ->post('api/account', [
                 'id' => $account1->id(),
-                'userId' => $account1->userId(),
                 'code' => $account1->code(),
                 'name' => $account1->name(),
-                'balance' => $account1->balance()->amount(),
+                'balance' => (string) $account1->balance()->amount(),
                 'currency' => $account1->balance()->symbol(),
             ]);
 
@@ -135,10 +173,9 @@ class AccountPostControllerTest extends TestCase
             ])
             ->post('api/account', [
                 'id' => $account2->id(),
-                'userId' => $account2->userId(),
                 'code' => $account2->code(),
                 'name' => $account2->name(),
-                'balance' => $account2->balance()->amount(),
+                'balance' => (string) $account2->balance()->amount(),
                 'currency' => $account2->balance()->symbol(),
             ]);
 

@@ -18,10 +18,9 @@ class AccountGetControllerTest extends TestCase
         $token = auth()->login($user);
         
         $accountId = fake()->uuid();
-        $accountUserId = $user->id;
         $accountCode = fake()->word();
         $accountName = fake()->name();
-        $accountBalance = fake()->randomFloat();
+        $accountBalance = $this->fakeAmount();
         $accountCurrency = fake()->randomElement(['bs', 'usd']);
 
         $this
@@ -31,7 +30,6 @@ class AccountGetControllerTest extends TestCase
             ])
             ->post('api/account', [
                 'id' => $accountId,
-                'userId' => $accountUserId,
                 'code' => $accountCode,
                 'name' => $accountName,
                 'balance' => $accountBalance,
@@ -50,7 +48,7 @@ class AccountGetControllerTest extends TestCase
         expect($json['error'])->toBe([]);
         expect($json['body'])->toBe([
             'id' => $accountId,
-            'userId' => $accountUserId,
+            'userId' => $user->id,
             'code' => $accountCode,
             'name' => $accountName,
             'balance' => $accountBalance,
@@ -68,7 +66,7 @@ class AccountGetControllerTest extends TestCase
         $accountUserId = $user->id;
         $accountCode = fake()->word();
         $accountName = fake()->name();
-        $accountBalance = fake()->randomFloat();
+        $accountBalance = $this->fakeAmount();
         $accountCurrency = fake()->randomElement(['bs', 'usd']);
 
         $this

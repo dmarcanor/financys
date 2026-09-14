@@ -18,7 +18,7 @@ class AccountMother
         ?string $userId = null,
         ?string $code = null,
         ?string $name = null,
-        ?float $balance = null,
+        ?string $balance = null,
         ?string $currency = null
     ): Account
     {
@@ -31,7 +31,7 @@ class AccountMother
             new AccountName($name ?? fake()->name()),
             new AccountBalance(
                 Symbols::from($currency ?? fake()->randomElement(['bs', 'usd'])),
-                $balance ?? fake()->randomFloat()
+                $balance ?? (string) fake()->randomFloat(nbMaxDecimals: 8)
             )
         );
     }

@@ -8,6 +8,11 @@ use Shared\Domain\Aggregate;
 
 abstract class TestCase extends BaseTestCase
 {
+    protected function fakeAmount($nbMaxDecimals = null, $min = 0, $max = null): string
+    {
+        return number_format(fake()->randomFloat($nbMaxDecimals, $min, $max), 8, '.', '');
+    }
+
     protected function similarTo(object $expected): \Mockery\Matcher\Closure
     {
         return Mockery::on(function ($actual) use ($expected): bool {

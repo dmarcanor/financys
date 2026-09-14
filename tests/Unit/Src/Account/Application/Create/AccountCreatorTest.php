@@ -99,7 +99,7 @@ final class AccountCreatorTest extends TestCase
     public function test_it_should_throw_negative_currency_exception_when_balance_is_negative(): void
     {
         $request = AccountCreatorRequestMother::create(
-            balance: -100,
+            balance: '-100.000000',
             currency: 'usd'
         );
 

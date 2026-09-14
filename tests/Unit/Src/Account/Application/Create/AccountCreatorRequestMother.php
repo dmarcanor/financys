@@ -13,7 +13,7 @@ final class AccountCreatorRequestMother
         ?string $userId = null,
         ?string $code = null,
         ?string $name = null,
-        ?float $balance = null,
+        ?string $balance = null,
         ?string $currency = null
     ): AccountCreatorRequest
     {
@@ -22,7 +22,7 @@ final class AccountCreatorRequestMother
             $userId ?? fake()->uuid(),
             $code ?? fake()->word(),
             $name ?? fake()->name(),
-            $balance ?? fake()->randomFloat(),
+            $balance ?? (string) number_format(fake()->randomFloat(nbMaxDecimals: 8), 8, '.', ''),
             $currency ?? fake()->randomElement(['bs', 'usd']),
         );
     }
