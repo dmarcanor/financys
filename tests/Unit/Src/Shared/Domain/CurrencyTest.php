@@ -9,24 +9,11 @@ use Shared\Domain\Symbols;
 use Tests\TestCase;
 use ValueError;
 
-class TestableCurrency extends Currency
-{
-    public function isNegative(): bool
-    {
-        return parent::isNegative();
-    }
-}
-
 class CurrencyTest extends TestCase
 {
     private function currency(string $amount): Currency
     {
         return new Currency(Symbols::USD, $amount);
-    }
-
-    private function negative(string $amount): bool
-    {
-        return (new TestableCurrency(Symbols::USD, $amount))->isNegative();
     }
 
     public function test_it_should_pad_whole_number_to_eight_decimals(): void
@@ -86,15 +73,15 @@ class CurrencyTest extends TestCase
 
     public function test_it_should_detect_negative_amounts(): void
     {
-        expect($this->negative('-10'))->toBeTrue();
-        expect($this->negative('-0.001'))->toBeTrue();
+        expect($this->currency('-10')->isNegative())->toBeTrue();
+        expect($this->currency('-0.001')->isNegative())->toBeTrue();
     }
 
     public function test_it_should_not_detect_zero_or_positive_as_negative(): void
     {
-        expect($this->negative('10'))->toBeFalse();
-        expect($this->negative('0'))->toBeFalse();
-        expect($this->negative('-0'))->toBeFalse();
+        expect($this->currency('10')->isNegative())->toBeFalse();
+        expect($this->currency('0')->isNegative())->toBeFalse();
+        expect($this->currency('-0')->isNegative())->toBeFalse();
     }
 
     public function test_it_should_reject_malformed_amount(): void
