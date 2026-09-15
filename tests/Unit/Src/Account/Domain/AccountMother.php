@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Unit\Src\Account\Domain;
 
@@ -18,21 +18,35 @@ class AccountMother
         ?string $userId = null,
         ?string $code = null,
         ?string $name = null,
-        ?string $balance = null,
         ?string $currency = null
-    ): Account
-    {
-        $faker = \Faker\Factory::create();
-
+    ): Account {
         return Account::create(
             new Uuid($id ?? fake()->uuid),
             new Uuid($userId ?? fake()->uuid()),
             new AccountCode($code ?? fake()->word()),
             new AccountName($name ?? fake()->name()),
-            new AccountBalance(
-                Symbols::from($currency ?? fake()->randomElement(['bs', 'usd'])),
-                $balance ?? fake()->randomNumber(9) . '.' . str_pad((string) fake()->randomNumber(8), 8, '0', STR_PAD_LEFT)
-            )
+            Symbols::from($currency ?? fake()->randomElement(['bs', 'usd'])),
         );
     }
+
+    // public static function create(
+    //     ?string $id = null,
+    //     ?string $userId = null,
+    //     ?string $code = null,
+    //     ?string $name = null,
+    //     ?string $balance = null,
+    //     ?string $currency = null
+    // ): Account
+    // {
+    //     return Account::create(
+    //         new Uuid($id ?? fake()->uuid),
+    //         new Uuid($userId ?? fake()->uuid()),
+    //         new AccountCode($code ?? fake()->word()),
+    //         new AccountName($name ?? fake()->name()),
+    //         new AccountBalance(
+    //             Symbols::from($currency ?? fake()->randomElement(['bs', 'usd'])),
+    //             $balance ?? fake()->randomNumber(9) . '.' . str_pad((string) fake()->randomNumber(8), 8, '0', STR_PAD_LEFT)
+    //         )
+    //     );
+    // }
 }

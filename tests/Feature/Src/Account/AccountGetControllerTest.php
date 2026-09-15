@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Financys\Account\Application\Creator;
+namespace Tests\Feature\Src\Account;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -16,11 +16,11 @@ class AccountGetControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $token = auth()->login($user);
-        
+
         $accountId = fake()->uuid();
         $accountCode = fake()->word();
         $accountName = fake()->name();
-        $accountBalance = $this->fakeAmount();
+        $accountBalance = '0.00000000';
         $accountCurrency = fake()->randomElement(['bs', 'usd']);
 
         $this
@@ -32,7 +32,6 @@ class AccountGetControllerTest extends TestCase
                 'id' => $accountId,
                 'code' => $accountCode,
                 'name' => $accountName,
-                'balance' => $accountBalance,
                 'currency' => $accountCurrency,
             ]);
 
@@ -57,13 +56,14 @@ class AccountGetControllerTest extends TestCase
         expect($response->status())->toBe(200);
     }
 
+    // TODO: make this test use the future update endpoint to test preserving large balance precision. The current implementation does not allow setting the balance directly, so this test may not be valid until the update endpoint is implemented.
     public function test_it_should_preserve_large_balance_precision()
     {
         $user = User::factory()->create();
         $token = auth()->login($user);
 
         $accountId = fake()->uuid();
-        $accountBalance = '128492179.16945100';
+        $accountBalance = '0.00000000';
 
         $this
             ->withHeaders([
@@ -74,7 +74,6 @@ class AccountGetControllerTest extends TestCase
                 'id' => $accountId,
                 'code' => fake()->word(),
                 'name' => fake()->name(),
-                'balance' => $accountBalance,
                 'currency' => 'usd',
             ]);
 
@@ -94,12 +93,11 @@ class AccountGetControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $token = auth()->login($user);
-        
+
         $accountId = fake()->uuid();
         $accountUserId = $user->id;
         $accountCode = fake()->word();
         $accountName = fake()->name();
-        $accountBalance = $this->fakeAmount();
         $accountCurrency = fake()->randomElement(['bs', 'usd']);
 
         $this
@@ -112,7 +110,6 @@ class AccountGetControllerTest extends TestCase
                 'userId' => $accountUserId,
                 'code' => $accountCode,
                 'name' => $accountName,
-                'balance' => $accountBalance,
                 'currency' => $accountCurrency,
             ]);
 
@@ -128,7 +125,7 @@ class AccountGetControllerTest extends TestCase
         $json = $response->json();
 
         expect($json)->toHaveKeys(['error', 'body']);
-        expect($json['error'])->toBe(["You are not authorized to access this account."]);
+        expect($json['error'])->toBe(['You are not authorized to access this account.']);
         expect($json['body'])->toBe([]);
         expect($response->status())->toBe(403);
     }
@@ -137,7 +134,7 @@ class AccountGetControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $token = auth()->login($user);
-        
+
         $accountId = fake()->uuid();
 
         $response = $this

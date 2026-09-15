@@ -28,7 +28,6 @@ class AccountPostControllerTest extends TestCase
                 'id' => fake()->uuid(),
                 'code' => fake()->word(),
                 'name' => fake()->name(),
-                'balance' => $this->fakeAmount(),
                 'currency' => fake()->randomElement(['bs', 'usd']),
             ]);
 
@@ -43,7 +42,6 @@ class AccountPostControllerTest extends TestCase
         $response = $this->post('api/account', [
             'id' => fake()->uuid(),
             'name' => fake()->name(),
-            'balance' => $this->fakeAmount(),
             'currency' => fake()->randomElement(['bs', 'usd']),
         ]);
 
@@ -65,7 +63,6 @@ class AccountPostControllerTest extends TestCase
             ->post('api/account', [
                 'id' => fake()->uuid(),
                 'name' => fake()->name(),
-                'balance' => $this->fakeAmount(),
                 'currency' => fake()->randomElement(['bs', 'usd']),
             ]);
 
@@ -90,7 +87,6 @@ class AccountPostControllerTest extends TestCase
                 'id' => fake()->uuid(),
                 'code' => fake()->word(),
                 'name' => fake()->name(),
-                'balance' => $this->fakeAmount(),
                 'currency' => fake()->randomElement(['bs', 'usd']),
             ]);
 
@@ -119,7 +115,6 @@ class AccountPostControllerTest extends TestCase
                 'id' => $account1->id(),
                 'code' => $account1->code(),
                 'name' => $account1->name(),
-                'balance' => (string) $account1->balance()->amount(),
                 'currency' => $account1->balance()->symbol(),
             ])
             ->assertStatus(200);
@@ -133,7 +128,6 @@ class AccountPostControllerTest extends TestCase
                 'id' => $account2->id(),
                 'code' => $account2->code(),
                 'name' => $account2->name(),
-                'balance' => (string) $account2->balance()->amount(),
                 'currency' => $account2->balance()->symbol(),
             ])
             ->assertStatus(200);
@@ -154,7 +148,6 @@ class AccountPostControllerTest extends TestCase
             'id' => $account->id(),
             'code' => $account->code(),
             'name' => $account->name(),
-            'balance' => (string) $account->balance()->amount(),
             'currency' => $account->balance()->symbol(),
         ];
 
@@ -198,7 +191,6 @@ class AccountPostControllerTest extends TestCase
                 'id' => $account1->id(),
                 'code' => $account1->code(),
                 'name' => $account1->name(),
-                'balance' => (string) $account1->balance()->amount(),
                 'currency' => $account1->balance()->symbol(),
             ])
             ->assertStatus(200);
@@ -212,7 +204,6 @@ class AccountPostControllerTest extends TestCase
                 'id' => $account2->id(),
                 'code' => $account2->code(),
                 'name' => $account2->name(),
-                'balance' => (string) $account2->balance()->amount(),
                 'currency' => $account2->balance()->symbol(),
             ]);
 
@@ -239,7 +230,6 @@ class AccountPostControllerTest extends TestCase
                 'id' => $account->id(),
                 'code' => $account->code(),
                 'name' => $account->name(),
-                'balance' => (string) $account->balance()->amount(),
                 'currency' => $account->balance()->symbol(),
             ]);
 

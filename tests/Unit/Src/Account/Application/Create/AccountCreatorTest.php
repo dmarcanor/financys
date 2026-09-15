@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Unit\Src\Account\Application\Create;
 
@@ -10,7 +10,6 @@ use Financys\Account\Domain\AccountEmptyName;
 use Financys\Account\Domain\AccountRepository;
 use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
 use Shared\Domain\InvalidUuid;
-use Shared\Domain\NegativeCurrency;
 use Tests\TestCase;
 use Tests\Unit\Src\Account\Domain\AccountMother;
 
@@ -24,7 +23,6 @@ final class AccountCreatorTest extends TestCase
             $request->userId,
             $request->code,
             $request->name,
-            $request->balance,
             $request->currency
         );
 
@@ -37,7 +35,7 @@ final class AccountCreatorTest extends TestCase
     }
 
     public function test_it_should_throw_invalid_symbol_error(): void
-    {   
+    {
         $request = AccountCreatorRequestMother::create(
             currency: 'non-exist'
         );
@@ -53,7 +51,7 @@ final class AccountCreatorTest extends TestCase
     }
 
     public function test_it_should_throw_empty_name_exception(): void
-    {   
+    {
         $request = AccountCreatorRequestMother::create(
             name: ''
         );
@@ -90,21 +88,6 @@ final class AccountCreatorTest extends TestCase
 
         $this->expectException(InvalidUuid::class);
         $this->expectExceptionMessage('The uuid  is invalid.');
-
-        $repository = mock(AccountRepository::class);
-
-        (new AccountCreator($repository))($request);
-    }
-
-    public function test_it_should_throw_negative_currency_exception_when_balance_is_negative(): void
-    {
-        $request = AccountCreatorRequestMother::create(
-            balance: '-100.000000',
-            currency: 'usd'
-        );
-
-        $this->expectException(NegativeCurrency::class);
-        $this->expectExceptionMessage("The account balance -100.000000 usd can't be negative");
 
         $repository = mock(AccountRepository::class);
 
