@@ -13,13 +13,13 @@ class LoginPostController extends ApiController
     {
         return $this->validate(function () use ($request) {
             $credentials = $request->validate([
-                "email" => "required|email",
-                "password" => "required",
+                'email' => 'required|email',
+                'password' => 'required',
             ]);
 
             $token = Auth::attempt($credentials);
 
-            if (!$token) {
+            if (! $token) {
                 return $this->formatResponse(
                     [],
                     ['Unauthorized'],
@@ -30,8 +30,8 @@ class LoginPostController extends ApiController
             return $this->formatResponse(
                 [
                     'access_token' => $token,
-                    'token_type'   => 'bearer',
-                    'expires_in'   => auth()->factory()->getTTL() * 60
+                    'token_type' => 'bearer',
+                    'expires_in' => auth()->factory()->getTTL() * 60,
                 ],
                 [],
                 JsonResponse::HTTP_OK

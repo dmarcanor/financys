@@ -1,15 +1,16 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Shared\Domain;
 
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
-class Uuid 
+class Uuid
 {
-    public function __construct(protected string $uuid) {
-        if (!RamseyUuid::isValid($uuid)) {
+    public function __construct(protected string $uuid)
+    {
+        if (! RamseyUuid::isValid($uuid)) {
             throw new InvalidUuid($uuid);
         }
     }

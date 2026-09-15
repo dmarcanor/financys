@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Financys\Account\Domain;
 
@@ -15,7 +15,7 @@ final class AccountName
         }
     }
 
-    public function value() : string
+    public function value(): string
     {
         return $this->name;
     }

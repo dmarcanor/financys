@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Financys\Auth\Application;
 
-use DateTimeImmutable;
-
 class AuthenticatorResponse
 {
     public function __construct(

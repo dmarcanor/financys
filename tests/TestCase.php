@@ -4,6 +4,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Mockery;
+use Mockery\Matcher\Closure;
 use Shared\Domain\Aggregate;
 
 abstract class TestCase extends BaseTestCase
@@ -11,11 +12,11 @@ abstract class TestCase extends BaseTestCase
     protected function fakeAmount(): string
     {
         return fake()->randomNumber(9)
-            . '.'
-            . str_pad((string) fake()->randomNumber(8), 8, '0', STR_PAD_LEFT);
+            .'.'
+            .str_pad((string) fake()->randomNumber(8), 8, '0', STR_PAD_LEFT);
     }
 
-    protected function similarTo(object $expected): \Mockery\Matcher\Closure
+    protected function similarTo(object $expected): Closure
     {
         return Mockery::on(function ($actual) use ($expected): bool {
             if (get_class($expected) !== get_class($actual)) {

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Shared\Domain;
 
@@ -9,7 +9,7 @@ class Currency
     private const DECIMAL_PLACES = 8;
 
     public function __construct(
-        protected Symbols $symbol, 
+        protected Symbols $symbol,
         protected string $amount
     ) {
         $this->amount = $this->normalizeAmount($amount);

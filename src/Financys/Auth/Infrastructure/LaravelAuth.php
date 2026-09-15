@@ -14,15 +14,13 @@ class LaravelAuth implements AuthenticationRepository
     {
         $token = Auth::attempt([
             'email' => $email,
-            'password' => $password
+            'password' => $password,
         ]);
 
-        if (!$token) {
+        if (! $token) {
             return null;
         }
 
-        return new Authentication(
-            
-        );
+        return new Authentication;
     }
 }

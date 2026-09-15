@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types= 1);
+declare(strict_types=1);
 
 namespace Financys\Account\Domain;
-
-use Financys\Account\Domain\AccountEmptyCode;
 
 final class AccountCode
 {
@@ -15,7 +13,7 @@ final class AccountCode
         }
     }
 
-    public function value() : string
+    public function value(): string
     {
         return $this->code;
     }

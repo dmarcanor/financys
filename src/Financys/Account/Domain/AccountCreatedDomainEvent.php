@@ -12,8 +12,7 @@ class AccountCreatedDomainEvent extends DomainEvent
     public static function create(
         Uuid $id,
         array $payload,
-    ): self
-    {
+    ): self {
         return new self(
             $id,
             self::name(),

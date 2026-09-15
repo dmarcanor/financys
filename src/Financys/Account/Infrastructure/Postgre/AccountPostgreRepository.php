@@ -46,7 +46,7 @@ class AccountPostgreRepository implements AccountRepository
             new AccountName($account->name),
             new AccountBalance(
                 Symbols::from($account->currency),
-                (string )$account->balance,
+                (string) $account->balance,
             )
         );
     }

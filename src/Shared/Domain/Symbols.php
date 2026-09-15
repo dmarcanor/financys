@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Shared\Domain;
 
-enum Symbols: string {
+enum Symbols: string
+{
     case USD = 'usd';
     case BS = 'bs';
 }

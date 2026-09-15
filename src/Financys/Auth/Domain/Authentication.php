@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Financys\Auth\Domain;
 
 use DateTimeImmutable;
-use Shared\Domain\Uuid;
 
 class Authentication
 {

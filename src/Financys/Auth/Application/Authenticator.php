@@ -6,15 +6,14 @@ namespace Financys\Auth\Application;
 
 use Financys\Auth\Domain\AuthenticationRepository;
 
-class Authenticator 
+class Authenticator
 {
-    public function __construct(private AuthenticationRepository $authRepository)
-    {}
+    public function __construct(private AuthenticationRepository $authRepository) {}
 
     public function __invoke(AuthenticatorRequest $request): AuthenticatorResponse
     {
         $authentication = $this->authRepository->authenticate(
-            $request->email, 
+            $request->email,
             $request->password
         );
 

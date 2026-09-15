@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types= 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Src\Auth;
 
@@ -18,7 +18,7 @@ class LoginPostControllerTest extends TestCase
 
         $response = $this->post('/api/login', [
             'email' => $user->email,
-            'password'=> 'pass',
+            'password' => 'pass',
         ]);
 
         $json = $response->json();
@@ -32,14 +32,14 @@ class LoginPostControllerTest extends TestCase
     {
         $response = $this->post('/api/login', [
             'email' => 'false@test.com',
-            'password'=> 'password',
+            'password' => 'password',
         ]);
 
         $json = $response->json();
 
         expect($json)->toBe([
             'error' => ['Unauthorized'],
-            'body' => []
+            'body' => [],
         ]);
         expect($response->status())->toBe(401);
     }
@@ -48,7 +48,7 @@ class LoginPostControllerTest extends TestCase
     {
         $response = $this->post('/api/login', [
             'email' => 'invalidEmail',
-            'password'=> 'validPassword',
+            'password' => 'validPassword',
         ]);
 
         $json = $response->json();
@@ -63,7 +63,7 @@ class LoginPostControllerTest extends TestCase
     {
         $response = $this->post('/api/login', [
             'email' => 'test@test.com',
-            'password'=> '',
+            'password' => '',
         ]);
 
         $json = $response->json();
