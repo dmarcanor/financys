@@ -68,11 +68,32 @@ services:
       - 6379:6379
     networks:
       - financys
-    
+
+  rabbitmq:
+    image: rabbitmq:4.3.5-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq-server
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - financys
+    environment:
+      RABBITMQ_DEFAULT_USER: ${QUEUE_DEFAULT_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${QUEUE_DEFAULT_PASS:-guest}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_log:/var/log/rabbitmq
+
 volumes:
   financys_postgres_data:
     external: true
   financys_redis_data:
+    external: true
+  rabbitmq_data:
+    external: true
+  rabbitmq_log:
     external: true
 
 networks:
