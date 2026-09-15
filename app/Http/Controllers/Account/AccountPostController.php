@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ApiPostController;
 use Financys\Account\Application\Creator\AccountCreator;
 use Financys\Account\Application\Creator\AccountCreatorRequest;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Cache;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Http\Request;
 
-class AccountPostController extends ApiController
+class AccountPostController extends ApiPostController
 {
     public function __construct(
         private readonly AccountCreator $accountCreator,
@@ -20,65 +18,31 @@ class AccountPostController extends ApiController
 
     public function __invoke(Request $request): JsonResponse
     {
-        return $this->validate(function () use ($request) {
-            $idempotencyKey = $request->header('Idempotency-Key');
-            $cachedResponse = Cache::get("{$request->route()->uri()}-{$idempotencyKey}");
+        return $this->idempotent($request, function () use ($request) {
+            return $this->validate(function () use ($request) {
+                $account = $request->validate([
+                    'id' => 'required|unique:accounts,id',
+                    'code' => 'required',
+                    'name' => 'required',
+                    'balance' => 'required|numeric|min:0|decimal:8,8',
+                    'currency' => 'required',
+                ]);
 
-            $account = $request->validate([
-                'id' => 'required|unique:accounts,id',
-                'code' => 'required',
-                'name' => 'required',
-                'balance' => 'required|numeric|min:0|decimal:8,8',
-                'currency' => 'required',
-            ]);
+                ($this->accountCreator)(new AccountCreatorRequest(
+                    $account['id'],
+                    auth()->user()->id,
+                    $account['code'],
+                    $account['name'],
+                    $account['balance'],
+                    $account['currency'],
+                ));
 
-            if ($idempotencyKey === null) {
                 return $this->formatResponse(
                     [],
-                    ['Idempotency-Key header is required.'],
-                    JsonResponse::HTTP_BAD_REQUEST
-                );
-            }
-
-            if (! Uuid::isValid($idempotencyKey)) {
-                return $this->formatResponse(
                     [],
-                    ['Idempotency-Key header must be a valid UUID.'],
-                    JsonResponse::HTTP_BAD_REQUEST
+                    JsonResponse::HTTP_OK
                 );
-            }
-
-            if ($cachedResponse !== null && $cachedResponse['request'] === $request->all()) {
-                return $this->formatResponse(
-                    $cachedResponse['response']['body'] ?? [],
-                    $cachedResponse['response']['error'] ?? [],
-                    $cachedResponse['response']['status'] ?? 200
-                );
-            }
-
-            ($this->accountCreator)(new AccountCreatorRequest(
-                $account['id'],
-                auth()->user()->id,
-                $account['code'],
-                $account['name'],
-                $account['balance'],
-                $account['currency'],
-            ));
-
-            Cache::put("{$request->route()->uri()}-{$idempotencyKey}", [
-                'request' => $request->all(),
-                'response' => [
-                    'body' => [],
-                    'error' => [],
-                    'status' => 200,
-                ],
-            ], now()->addHours(24));
-
-            return $this->formatResponse(
-                [],
-                [],
-                200
-            );
+            });
         });
     }
 }
