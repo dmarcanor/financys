@@ -24,7 +24,6 @@ class AccountPostController extends ApiPostController
                     'id' => 'required|unique:accounts,id',
                     'code' => 'required',
                     'name' => 'required',
-                    'balance' => 'required|numeric|min:0|decimal:8,8',
                     'currency' => 'required',
                 ]);
 
@@ -33,7 +32,6 @@ class AccountPostController extends ApiPostController
                     auth()->user()->id,
                     $account['code'],
                     $account['name'],
-                    $account['balance'],
                     $account['currency'],
                 ));
 

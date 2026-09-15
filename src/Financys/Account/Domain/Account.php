@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Financys\Account\Domain;
 
 use Shared\Domain\Aggregate;
+use Shared\Domain\Symbols;
 use Shared\Domain\Uuid;
 
 final class Account extends Aggregate
@@ -22,15 +23,14 @@ final class Account extends Aggregate
         Uuid $userId,
         AccountCode $code,
         AccountName $name,
-        AccountBalance $balance
-    ): self
-    {
+        Symbols $symbol,
+    ): self {
         $account = new self(
             $id,
             $userId,
             $code,
             $name,
-            $balance
+            AccountBalance::create($symbol, '0')
         );
 
         $account->addEvent(AccountCreatedDomainEvent::create(
@@ -42,11 +42,11 @@ final class Account extends Aggregate
                 'name' => $account->name(),
                 'balance' => [
                     'symbol' => $account->balance()->symbol(),
-                    'amount' => $account->balance()->amount()
-                ]
+                    'amount' => $account->balance()->amount(),
+                ],
             ]
         ));
-        
+
         return $account;
     }
 

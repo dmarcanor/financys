@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Financys\Account\Application\Creator;
 
 use Financys\Account\Domain\Account;
-use Financys\Account\Domain\AccountBalance;
 use Financys\Account\Domain\AccountCode;
 use Financys\Account\Domain\AccountName;
 use Financys\Account\Domain\AccountRepository;
@@ -28,7 +27,7 @@ final class AccountCreator
                 new Uuid($request->userId),
                 new AccountCode($request->code),
                 new AccountName($request->name),
-                AccountBalance::create(Symbols::from($request->currency), $request->balance)
+                Symbols::from($request->currency)
             );
         } catch (ValueError) {
             throw new InvalidAccountBalanceSymbolException(
