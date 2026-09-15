@@ -7,6 +7,8 @@ down:
 setup:
 	docker volume create financys_postgres_data
 	docker volume create financys_redis_data
+	docker volume create rabbitmq_data
+	docker volume create rabbitmq_log
 	make up
 	cp .env.example .env
 	make setup-database
