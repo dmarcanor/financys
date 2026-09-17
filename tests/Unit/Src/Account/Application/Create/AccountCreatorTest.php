@@ -4,19 +4,27 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Src\Account\Application\Create;
 
+use App\Models\Account as ModelsAccount;
+use App\Models\User as ModelsUser;
 use Financys\Account\Application\Creator\AccountCreator;
 use Financys\Account\Domain\AccountEmptyCode;
 use Financys\Account\Domain\AccountEmptyName;
 use Financys\Account\Domain\AccountRepository;
 use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Event;
 use Shared\Domain\InvalidUuid;
 use Tests\TestCase;
 use Tests\Unit\Src\Account\Domain\AccountMother;
 
 final class AccountCreatorTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function test_it_should_create_an_account(): void
     {
+        Event::fake();
+
         $request = AccountCreatorRequestMother::create();
         $expected = AccountMother::create(
             $request->id,
@@ -25,6 +33,15 @@ final class AccountCreatorTest extends TestCase
             $request->name,
             $request->currency
         );
+
+        ModelsUser::factory()->create(['id' => $request->userId]);
+        ModelsAccount::create([
+            'id' => $request->id,
+            'user_id' => $request->userId,
+            'code' => $request->code,
+            'name' => $request->name,
+            'currency' => $request->currency,
+        ]);
 
         $repository = mock(AccountRepository::class);
         $repository->shouldReceive('create')
