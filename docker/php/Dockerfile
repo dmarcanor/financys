@@ -11,6 +11,8 @@ RUN apk add --no-cache $PHPIZE_DEPS \
     && docker-php-ext-enable redis \
     && apk del $PHPIZE_DEPS
 
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+
 # Set PHP timezone and charset
 RUN echo "date.timezone = America/Caracas" > /usr/local/etc/php/conf.d/timezone.ini \
     && echo "default_charset = \"UTF-8\"" >> /usr/local/etc/php/conf.d/charset.ini
