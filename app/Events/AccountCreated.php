@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Account;
+use Financys\Account\Domain\Account as DomainAccount;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -16,7 +17,7 @@ class AccountCreated
     /**
      * Create a new event instance.
      */
-    public function __construct(public readonly Account $account)
+    public function __construct(public readonly DomainAccount $account)
     {
         //
     }
