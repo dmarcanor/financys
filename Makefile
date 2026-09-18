@@ -55,7 +55,7 @@ setup-database:
 	echo "Database configuration written to .env"
 
 install:
-	docker run --rm -w /app -v ${PWD}:/app composer composer install
+	docker compose run --rm php composer install
 
 generate-laravel-key:
 	docker compose exec php php artisan key:generate
