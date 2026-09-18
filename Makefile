@@ -21,18 +21,20 @@ setup:
 setup-database:
 	@test -f .env || cp .env.example .env
 	@echo "Configuring PostgreSQL connection in .env (press Enter to keep the default)"
-	@read -p "DB_CONNECTION [pgsql]: " conn; \
+	@printf "DB_CONNECTION [pgsql]: "; read -r conn; \
 	conn=$${conn:-pgsql}; \
-	read -p "DB_HOST [127.0.0.1]: " host; \
+	printf "DB_HOST [127.0.0.1]: "; read -r host; \
 	host=$${host:-127.0.0.1}; \
-	read -p "DB_PORT [5432]: " port; \
+	printf "DB_PORT [5432]: "; read -r port; \
 	port=$${port:-5432}; \
-	read -p "DB_DATABASE [app_db]: " db; \
+	printf "DB_DATABASE [app_db]: "; read -r db; \
 	db=$${db:-app_db}; \
-	read -p "DB_USERNAME [pguser]: " user; \
+	printf "DB_USERNAME [pguser]: "; read -r user; \
 	user=$${user:-pguser}; \
-	read -s -p "DB_PASSWORD [changeme]: " pass; \
-	echo; \
+	printf "DB_PASSWORD [changeme]: "; \
+	if [ -t 0 ]; then stty -echo; fi; \
+	read -r pass; \
+	if [ -t 0 ]; then stty echo; echo; fi; \
 	pass=$${pass:-changeme}; \
 	set_env() { \
 		key=$$1; value=$$2; \
