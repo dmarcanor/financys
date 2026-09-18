@@ -3,8 +3,8 @@ FROM php:8.5-fpm-alpine
 ARG DEV_UID=1000
 ARG DEV_GID=1000
 
-RUN apk add --no-cache su-exec shadow bash postgresql-dev \
-    && docker-php-ext-install pdo pdo_pgsql pgsql bcmath
+RUN apk add --no-cache su-exec shadow bash postgresql-dev linux-headers \
+    && docker-php-ext-install pdo pdo_pgsql pgsql bcmath sockets
 
 RUN apk add --no-cache $PHPIZE_DEPS \
     && pecl install redis \
