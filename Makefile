@@ -9,9 +9,9 @@ setup:
 	docker volume create financys_redis_data
 	docker volume create rabbitmq_data
 	docker volume create rabbitmq_log
-	make up
 	cp .env.example .env
 	make setup-database
+	make up
 	make install
 	make generate-laravel-key
 	make generate-jwt-key
