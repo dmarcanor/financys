@@ -8,10 +8,6 @@ abstract class Aggregate
 {
     protected array $events = [];
 
-    // public function __construct(
-    //     protected array $events = []
-    // ) {}
-
     protected function addEvent(DomainEvent $event): void
     {
         $this->events[] = $event;
@@ -23,5 +19,10 @@ abstract class Aggregate
         $this->events = [];
 
         return $events;
+    }
+
+    public function events(): array
+    {
+        return $this->events;
     }
 }
