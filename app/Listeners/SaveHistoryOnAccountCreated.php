@@ -23,19 +23,6 @@ class SaveHistoryOnAccountCreated implements ShouldQueue
      */
     public function handle(AccountCreated $event): void
     {
-        dd($event);
-        Log::alert('SaveHistoryOnAccountCreated', json_encode($event));
-        // create a file
-        // $filePath = storage_path('app/history.txt');
-        // $fileContent = sprintf(
-        //     "Account created: %s, User ID: %s, Code: %s, Name: %s, Balance: %s, Currency: %s\n",
-        //     $event->account->id,
-        //     $event->account->userId,
-        //     $event->account->code,
-        //     $event->account->name,
-        //     $event->account->balance,
-        //     $event->account->currency
-        // );
-        // file_put_contents($filePath, $fileContent, FILE_APPEND);
+        Log::info('SaveHistoryOnAccountCreated', json_decode(json_encode($event->account), true));
     }
 }
