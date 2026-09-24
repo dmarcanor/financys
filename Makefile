@@ -74,5 +74,4 @@ seed:
 
 test:
 	docker compose exec php sh -c 'DB_DATABASE=financys_test php artisan migrate:fresh --force'
-	docker compose exec php ./vendor/bin/pest --parallel
-
+	docker compose exec php ./vendor/bin/pest
