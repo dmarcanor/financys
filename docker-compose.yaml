@@ -69,6 +69,36 @@ services:
     networks:
       - financys
 
+  queue-worker:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        DEV_UID: ${HOST_UID}
+        DEV_GID: ${HOST_GID}
+    container_name: queue-worker
+    working_dir: /var/www/html
+    restart: always
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90", "--sleep=3"]
+    volumes:
+      - .:/var/www/html
+    networks:
+      - financys
+    depends_on:
+      - php
+      - rabbitmq
+      - postgres
+    environment:
+      TZ: America/Caracas
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
   rabbitmq:
     image: rabbitmq:4.3.5-management-alpine
     container_name: rabbitmq
