@@ -6,5 +6,5 @@ namespace Shared\Domain;
 
 interface EventBus
 {
-    public function dispatch(DomainEvent $event);
+    public function dispatch(DomainEvent ...$events): void;
 }
