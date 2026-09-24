@@ -37,7 +37,7 @@ final class AccountCreator
             );
         }
 
-        // $this->repository->create($account);
+        $this->repository->create($account);
         AccountCreated::dispatch($account);
     }
 }
