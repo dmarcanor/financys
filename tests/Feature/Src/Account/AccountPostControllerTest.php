@@ -7,6 +7,7 @@ namespace Tests\Feature\Src\Account;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Override;
 use Tests\TestCase;
 use Tests\Unit\Src\Account\Domain\AccountMother;
 
@@ -14,9 +15,18 @@ class AccountPostControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
+    private User $user;
+
+    #[Override]
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
+
     public function test_it_should_create_an_account()
     {
-        $user = User::factory()->create();
+        $user = $this->user;
         $token = auth()->login($user);
 
         $response = $this
@@ -76,7 +86,7 @@ class AccountPostControllerTest extends TestCase
 
     public function test_it_should_return_error_when_idempotency_key_is_missing()
     {
-        $user = User::factory()->create();
+        $user = $this->user;
         $token = auth()->login($user);
 
         $response = $this
@@ -100,7 +110,7 @@ class AccountPostControllerTest extends TestCase
 
     public function test_it_should_create_two_account_because_different_idempotency_key()
     {
-        $user = User::factory()->create();
+        $user = $this->user;
         $token = auth()->login($user);
 
         $account1 = AccountMother::create(userId: $user->id);
@@ -139,7 +149,7 @@ class AccountPostControllerTest extends TestCase
 
     public function test_it_should_create_one_account_because_same_idempotency_key_and_payload()
     {
-        $user = User::factory()->create();
+        $user = $this->user;
         $token = auth()->login($user);
         $idempotencyKey = fake()->uuid();
 
@@ -175,7 +185,7 @@ class AccountPostControllerTest extends TestCase
 
     public function test_it_should_reject_same_idempotency_key_with_different_payload()
     {
-        $user = User::factory()->create();
+        $user = $this->user;
         $token = auth()->login($user);
         $idempotencyKey = fake()->uuid();
 
@@ -217,7 +227,7 @@ class AccountPostControllerTest extends TestCase
 
     public function test_it_should_return_error_when_idempotency_key_is_not_a_uuid()
     {
-        $user = User::factory()->create();
+        $user = $this->user;
         $token = auth()->login($user);
         $account = AccountMother::create(userId: $user->id);
 
