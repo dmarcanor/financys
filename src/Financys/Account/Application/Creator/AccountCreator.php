@@ -11,6 +11,7 @@ use Financys\Account\Domain\AccountCode;
 use Financys\Account\Domain\AccountName;
 use Financys\Account\Domain\AccountRepository;
 use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
+use Shared\Domain\EventBus;
 use Shared\Domain\Symbols;
 use Shared\Domain\Uuid;
 use ValueError;
@@ -18,7 +19,8 @@ use ValueError;
 final class AccountCreator
 {
     public function __construct(
-        private readonly AccountRepository $repository
+        private readonly AccountRepository $repository,
+        private readonly EventBus $eventBus
     ) {}
 
     public function __invoke(AccountCreatorRequest $request): void
@@ -38,6 +40,7 @@ final class AccountCreator
         }
 
         $this->repository->create($account);
-        AccountCreated::dispatch($account);
+        $this->eventBus->dispatch(...$account->extractEvents());
+        // AccountCreated::dispatch($account);
     }
 }
