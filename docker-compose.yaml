@@ -17,6 +17,14 @@ services:
       - financys
     environment:
       TZ: America/Caracas
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
   
   nginx:
     image: nginx:alpine
@@ -32,6 +40,14 @@ services:
       - financys
     depends_on:
       - php
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
 
   postgres:
     image: postgres:18.3-alpine
@@ -56,6 +72,14 @@ services:
       timeout: 5s
       retries: 5
       start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
   
   redis:
     image: redis:8.6.2-alpine
@@ -68,6 +92,14 @@ services:
       - 6379:6379
     networks:
       - financys
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
 
   queue-worker:
     build:
@@ -115,6 +147,14 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
       - rabbitmq_log:/var/log/rabbitmq
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
 volumes:
   financys_postgres_data:
