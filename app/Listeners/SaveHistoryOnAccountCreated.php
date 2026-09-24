@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\AccountCreated;
+use App\Events\Account\AccountCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Events\attributes\Listener;
 use Illuminate\Support\Facades\Log;
