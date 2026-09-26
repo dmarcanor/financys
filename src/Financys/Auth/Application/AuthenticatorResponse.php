@@ -7,7 +7,6 @@ namespace Financys\Auth\Application;
 class AuthenticatorResponse
 {
     public function __construct(
-        public readonly string $userId,
         public readonly string $token,
         public readonly string $type,
         public readonly string $expiresAt
