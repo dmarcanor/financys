@@ -28,7 +28,7 @@ class LaravelAuth implements AuthenticationRepository
             return null;
         }
 
-        $expirationTimeInMinutes = auth()->factory()->getTTL();
+        $expirationTimeInMinutes = config('jwt.ttl');
 
         return new Authentication(
             $token,
