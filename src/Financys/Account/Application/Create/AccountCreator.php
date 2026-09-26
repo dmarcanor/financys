@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Financys\Account\Application\Creator;
+namespace Financys\Account\Application\Create;
 
 use App\Events\AccountCreated;
 use App\Models\Account as ModelsAccount;

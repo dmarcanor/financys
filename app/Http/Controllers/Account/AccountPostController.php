@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\ApiPostController;
-use Financys\Account\Application\Creator\AccountCreator;
-use Financys\Account\Application\Creator\AccountCreatorRequest;
+use Financys\Account\Application\Create\AccountCreator;
+use Financys\Account\Application\Create\AccountCreatorRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
