@@ -16,6 +16,9 @@ class LaravelAuth implements AuthenticationRepository
 
     public function authenticate(string $email, string $password): ?Authentication
     {
+        /**
+         * @var string|false $token
+         */ 
         $token = Auth::attempt([
             'email' => $email,
             'password' => $password,
