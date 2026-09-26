@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\ApiController;
-use Financys\Auth\Application\Authenticator;
-use Financys\Auth\Application\AuthenticatorRequest;
+use Financys\Auth\Application\Authenticate\Authenticator;
+use Financys\Auth\Application\Authenticate\AuthenticatorRequest;
 use Financys\Auth\Domain\FailedAuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

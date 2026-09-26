@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Financys\Auth\Application;
+namespace Financys\Auth\Application\Authenticate;
 
 class AuthenticatorResponse
 {
