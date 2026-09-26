@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Account;
 
 use App\Events\Account\AccountCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,6 +23,6 @@ class SaveHistoryOnAccountCreated implements ShouldQueue
      */
     public function handle(AccountCreated $event): void
     {
-        Log::info('SaveHistoryOnAccountCreated', json_decode(json_encode($event->account), true));
+        Log::info('SaveHistoryOnAccountCreated GG: ' . serialize($event->event->payload()));
     }
 }
