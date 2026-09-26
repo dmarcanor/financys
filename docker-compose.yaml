@@ -156,6 +156,23 @@ services:
           cpus: '0.25'
           memory: 256M
 
+  mongo:
+    image: mongo:7.0
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    networks:
+      - financys
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
 volumes:
   financys_postgres_data:
     external: true
