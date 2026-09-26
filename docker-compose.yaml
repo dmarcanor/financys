@@ -170,6 +170,8 @@ services:
       LANG: C.UTF-8
     networks:
       - financys
+    volumes:
+      - financys_mongo_data:/data/db
     deploy:
       resources:
         limits:
