@@ -23,7 +23,7 @@ class LoginPostControllerTest extends TestCase
 
         $json = $response->json();
 
-        expect($json)->toHaveKeys(['error', 'body.access_token', 'body.token_type', 'body.expires_in']);
+        expect($json)->toHaveKeys(['error', 'body.access_token', 'body.token_type', 'body.expires_at']);
         expect($json['error'])->toBe([]);
         expect($response->status())->toBe(200);
     }
