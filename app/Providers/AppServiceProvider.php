@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Financys\Account\Domain\AccountRepository;
 use Financys\Account\Infrastructure\Postgre\AccountPostgreRepository;
+use Financys\Auth\Domain\AuthenticationRepository;
+use Financys\Auth\Infrastructure\LaravelAuth;
 use Illuminate\Support\ServiceProvider;
 use Shared\Domain\EventBus;
 use Shared\Infrastructure\EventBus\LaravelEventBus;
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(AuthenticationRepository::class, LaravelAuth::class);
         $this->app->bind(AccountRepository::class, AccountPostgreRepository::class);
         $this->app->bind(EventBus::class, LaravelEventBus::class);
     }
