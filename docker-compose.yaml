@@ -172,6 +172,12 @@ services:
       - financys
     volumes:
       - financys_mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh -u ${MONGO_INITDB_ROOT_USERNAME:-root} -p ${MONGO_INITDB_ROOT_PASSWORD:-pass} --authenticationDatabase admin --quiet --eval \"db.adminCommand('ping').ok\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     deploy:
       resources:
         limits:
