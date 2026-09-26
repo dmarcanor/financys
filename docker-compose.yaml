@@ -157,6 +157,8 @@ services:
           memory: 256M
 
   mongo:
+    # TODO: Upgrade to mongo:8.3.x when a version compatible with Linux kernel 7.0.0+ is released
+    # See: https://jira.mongodb.org/browse/SERVER-121912
     image: mongo:7.0
     container_name: mongo
     restart: unless-stopped
