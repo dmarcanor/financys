@@ -9,7 +9,6 @@ use DateTimeImmutable;
 class Authentication
 {
     public function __construct(
-        public readonly string $userId,
         public readonly string $token,
         public readonly string $type,
         public readonly DateTimeImmutable $expiresAt
