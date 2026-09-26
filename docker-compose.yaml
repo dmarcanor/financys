@@ -166,6 +166,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-root}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-pass}
+      TZ: America/Caracas
+      LANG: C.UTF-8
     networks:
       - financys
     deploy:
