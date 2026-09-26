@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\ApiController;
-use Auth;
+use Financys\Auth\Application\Authenticator;
+use Financys\Auth\Application\AuthenticatorRequest;
+use Financys\Auth\Domain\FailedAuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class LoginPostController extends ApiController
 {
+    public function __construct(private Authenticator $authenticator)
+    {}
+
     public function __invoke(Request $request): JsonResponse
     {
         return $this->validate(function () use ($request) {
@@ -17,25 +22,28 @@ class LoginPostController extends ApiController
                 'password' => 'required',
             ]);
 
-            $token = Auth::attempt($credentials);
+            try {
+                $response = ($this->authenticator)(new AuthenticatorRequest(
+                    $credentials['email'], 
+                    $credentials['password']
+                ));
 
-            if (! $token) {
                 return $this->formatResponse(
-                    [],
-                    ['Unauthorized'],
-                    JsonResponse::HTTP_UNAUTHORIZED
-                );
-            }
-
-            return $this->formatResponse(
                 [
-                    'access_token' => $token,
-                    'token_type' => 'bearer',
-                    'expires_in' => auth()->factory()->getTTL() * 60,
+                    'access_token' => $response->token,
+                    'token_type' => $response->type,
+                    'expires_at' => $response->expiresAt,
                 ],
                 [],
                 JsonResponse::HTTP_OK
             );
+            } catch (FailedAuthenticationException $e) {
+                return $this->formatResponse(
+                    [],
+                    [$e->getMessage()],
+                    JsonResponse::HTTP_UNAUTHORIZED
+                );
+            }
         });
     }
 }
