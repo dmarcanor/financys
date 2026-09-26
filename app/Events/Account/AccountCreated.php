@@ -2,8 +2,6 @@
 
 namespace App\Events\Account;
 
-use App\Models\Account;
-use Financys\Account\Domain\Account as DomainAccount;
 use Financys\Account\Domain\AccountCreatedDomainEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -11,10 +9,6 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-function te()
-{
-    return 2;
-}
 
 class AccountCreated
 {
