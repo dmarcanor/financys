@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Src\Account\Application\Create;
+namespace Tests\Unit\Financys\Account\Application\Create;
 
-use Financys\Account\Application\Creator\AccountCreatorRequest;
+use Financys\Account\Application\Create\AccountCreatorRequest;
 
 final class AccountCreatorRequestMother
 {

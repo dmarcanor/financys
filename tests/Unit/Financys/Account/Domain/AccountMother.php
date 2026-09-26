@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Src\Account\Domain;
+namespace Tests\Unit\Financys\Account\Domain;
 
 use Financys\Account\Domain\Account;
 use Financys\Account\Domain\AccountBalance;

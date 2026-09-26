@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Src\Account;
+namespace Tests\Feature\Financys\Account;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Override;
 use Tests\TestCase;
-use Tests\Unit\Src\Account\Domain\AccountMother;
+use Tests\Unit\Financys\Account\Domain\AccountMother;
 
 class AccountPostControllerTest extends TestCase
 {

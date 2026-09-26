@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Src\Auth;
+namespace Tests\Feature\Financys\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Src\Account\Application\Create;
+namespace Tests\Unit\Financys\Account\Application\Create;
 
-use Financys\Account\Application\Creator\AccountCreator;
+use Financys\Account\Application\Create\AccountCreator;
 use Financys\Account\Domain\AccountEmptyCode;
 use Financys\Account\Domain\AccountEmptyName;
 use Financys\Account\Domain\AccountRepository;
@@ -12,7 +12,7 @@ use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
 use Shared\Domain\InvalidUuid;
 use Shared\Infrastructure\EventBus\LaravelEventBus;
 use Tests\TestCase;
-use Tests\Unit\Src\Account\Domain\AccountMother;
+use Tests\Unit\Financys\Account\Domain\AccountMother;
 
 final class AccountCreatorTest extends TestCase
 {
