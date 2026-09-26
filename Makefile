@@ -9,8 +9,10 @@ setup:
 	docker volume create financys_redis_data
 	docker volume create rabbitmq_data
 	docker volume create rabbitmq_log
+	docker volume create financys_mongo_data
 	cp .env.example .env
 	make setup-database
+	make setup-mongo
 	make up
 	make install
 	make generate-laravel-key
@@ -53,6 +55,39 @@ setup-database:
 	set_env DB_USERNAME "$$user"; \
 	set_env DB_PASSWORD "$$pass"; \
 	echo "Database configuration written to .env"
+
+setup-mongo:
+	@test -f .env || cp .env.example .env
+	@echo "Configuring MongoDB connection in .env (press Enter to keep the default)"
+	@printf "MONGO_HOST [mongo]: "; read -r host; \
+	host=$${host:-mongo}; \
+	printf "MONGO_PORT [27017]: "; read -r port; \
+	port=$${port:-27017}; \
+	printf "MONGO_DATABASE [financys]: "; read -r db; \
+	db=$${db:-financys}; \
+	printf "MONGO_USERNAME [dev]: "; read -r user; \
+	user=$${user:-dev}; \
+	printf "MONGO_PASSWORD [dev-pass]: "; \
+	if [ -t 0 ]; then stty -echo; fi; \
+	read -r pass; \
+	if [ -t 0 ]; then stty echo; echo; fi; \
+	pass=$${pass:-dev-pass}; \
+	set_env() { \
+		key=$$1; value=$$2; \
+		if grep -q "^$$key=" .env; then \
+			sed "s|^$$key=.*|$$key=$$value|" .env > .env.tmp && mv .env.tmp .env; \
+		elif grep -q "^# $$key=" .env; then \
+			sed "s|^# $$key=.*|$$key=$$value|" .env > .env.tmp && mv .env.tmp .env; \
+		else \
+			echo "$$key=$$value" >> .env; \
+		fi; \
+	}; \
+	set_env MONGO_HOST "$$host"; \
+	set_env MONGO_PORT "$$port"; \
+	set_env MONGO_DATABASE "$$db"; \
+	set_env MONGO_USERNAME "$$user"; \
+	set_env MONGO_PASSWORD "$$pass"; \
+	echo "MongoDB configuration written to .env"
 
 install:
 	docker compose run --rm php composer install
