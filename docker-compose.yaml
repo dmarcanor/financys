@@ -196,6 +196,8 @@ volumes:
     external: true
   rabbitmq_log:
     external: true
+  financys_mongo_data:
+    external: true
 
 networks:
   financys:
