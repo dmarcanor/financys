@@ -19,7 +19,7 @@ class Authenticator
         );
 
         if ($authentication === null) {
-            throw new FailedAuthenticationException();
+            throw new FailedAuthenticationException;
         }
 
         return new AuthenticatorResponse(
