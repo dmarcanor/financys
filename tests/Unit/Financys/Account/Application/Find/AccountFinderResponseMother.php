@@ -21,7 +21,7 @@ final class AccountFinderResponseMother
             $userId ?? fake()->uuid,
             $code ?? fake()->word,
             $name ?? fake()->name,
-            $balance ?? fake()->randomNumber(4) . '.' . str_pad((string) fake()->randomNumber(2), 2, '0', STR_PAD_LEFT),
+            $balance ?? fake()->randomNumber(4).'.'.str_pad((string) fake()->randomNumber(2), 2, '0', STR_PAD_LEFT),
             $currency ?? fake()->randomElement(['bs', 'usd'])
         );
     }
