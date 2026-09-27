@@ -74,4 +74,14 @@ final class Account extends Aggregate
     {
         return $this->balance;
     }
+
+    public function rename(AccountName $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function changeCode(AccountCode $code): void
+    {
+        $this->code = $code;
+    }
 }

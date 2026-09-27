@@ -50,4 +50,19 @@ class AccountPostgreRepository implements AccountRepository
             )
         );
     }
+
+    public function update(Account $account): void
+    {
+        $accountModel = DB::table('accounts')
+            ->where('id', $account->id());
+
+        if ($accountModel->count() <= 0) {
+            return;
+        }
+
+        $accountModel->update([
+            'name' => $account->name(),
+            'code' => $account->code(),
+        ]);
+    }
 }

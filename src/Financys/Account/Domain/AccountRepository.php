@@ -9,4 +9,6 @@ interface AccountRepository
     public function create(Account $account): void;
 
     public function find(string $id): ?Account;
+
+    public function update(Account $account): void;
 }
