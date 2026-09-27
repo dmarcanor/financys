@@ -11,6 +11,7 @@ use Shared\Domain\Aggregate;
 abstract class TestCase extends BaseTestCase
 {
     protected User $user;
+
     protected string $token;
 
     protected function createUser(): void
@@ -20,7 +21,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function token(): string
     {
-        return $this->token ?? $this->token = auth()->login($this->user);;
+        return $this->token ?? $this->token = auth()->login($this->user);
     }
 
     protected function similarTo(object $expected): Closure
