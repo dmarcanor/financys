@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Mockery;
 use Mockery\Matcher\Closure;
@@ -9,11 +10,17 @@ use Shared\Domain\Aggregate;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function fakeAmount(): string
+    protected User $user;
+    protected string $token;
+
+    protected function createUser(): void
     {
-        return fake()->randomNumber(9)
-            .'.'
-            .str_pad((string) fake()->randomNumber(8), 8, '0', STR_PAD_LEFT);
+        $this->user = User::factory()->create();
+    }
+
+    protected function token(): string
+    {
+        return $this->token ?? $this->token = auth()->login($this->user);;
     }
 
     protected function similarTo(object $expected): Closure
