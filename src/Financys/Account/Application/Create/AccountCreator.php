@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Financys\Account\Application\Create;
 
-use App\Events\AccountCreated;
-use App\Models\Account as ModelsAccount;
 use Financys\Account\Domain\Account;
 use Financys\Account\Domain\AccountCode;
 use Financys\Account\Domain\AccountName;
@@ -41,6 +39,5 @@ final class AccountCreator
 
         $this->repository->create($account);
         $this->eventBus->dispatch(...$account->extractEvents());
-        // AccountCreated::dispatch($account);
     }
 }
