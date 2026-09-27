@@ -9,7 +9,6 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-
 class AccountCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
