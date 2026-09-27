@@ -8,6 +8,7 @@ use Financys\Account\Domain\AccountCode;
 use Financys\Account\Domain\AccountName;
 use Financys\Account\Domain\AccountNotFound;
 use Financys\Account\Domain\AccountRepository;
+use Shared\Domain\Uuid;
 
 final class AccountUpdater
 {
@@ -22,6 +23,8 @@ final class AccountUpdater
         if ($account === null) {
             throw new AccountNotFound($request->id);
         }
+
+        $account->assertOwnedBy(new Uuid($request->requestingUserId));
 
         $account->rename(new AccountName($request->name));
         $account->changeCode(new AccountCode($request->code));

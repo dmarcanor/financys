@@ -10,6 +10,7 @@ final class AccountUpdaterRequest
         public readonly string $id, 
         public readonly string $code,
         public readonly string $name,
+        public readonly string $requestingUserId,
     )
     {}
 }

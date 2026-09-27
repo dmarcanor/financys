@@ -60,6 +60,13 @@ final class Account extends Aggregate
         return $this->userId->value();
     }
 
+    public function assertOwnedBy(Uuid $requestingUserId): void
+    {
+        if (! $this->userId->equals($requestingUserId)) {
+            throw new AccountNotOwnedByUser($this->id->value());
+        }
+    }
+
     public function code(): string
     {
         return $this->code->value();

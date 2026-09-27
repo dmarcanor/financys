@@ -6,6 +6,7 @@ namespace Financys\Account\Application\Find;
 
 use Financys\Account\Domain\AccountNotFound;
 use Financys\Account\Domain\AccountRepository;
+use Shared\Domain\Uuid;
 
 final class AccountFinder
 {
@@ -20,6 +21,8 @@ final class AccountFinder
         if ($account === null) {
             throw new AccountNotFound($request->id);
         }
+
+        $account->assertOwnedBy(new Uuid($request->requestingUserId));
 
         return new AccountFinderResponse(
             $account->id(),

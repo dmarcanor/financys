@@ -24,4 +24,9 @@ class Uuid
     {
         return $this->uuid;
     }
+
+    public function equals(self $other): bool
+    {
+        return $this->uuid === $other->uuid;
+    }
 }
