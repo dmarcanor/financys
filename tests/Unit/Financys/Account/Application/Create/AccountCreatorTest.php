@@ -9,8 +9,8 @@ use Financys\Account\Domain\AccountEmptyCode;
 use Financys\Account\Domain\AccountEmptyName;
 use Financys\Account\Domain\AccountRepository;
 use Financys\Account\Domain\InvalidAccountBalanceSymbolException;
+use Shared\Domain\EventBus;
 use Shared\Domain\InvalidUuid;
-use Shared\Infrastructure\EventBus\LaravelEventBus;
 use Tests\TestCase;
 use Tests\Unit\Financys\Account\Domain\AccountMother;
 
@@ -32,7 +32,7 @@ final class AccountCreatorTest extends TestCase
             ->once()
             ->with($this->similarTo($expected));
 
-        $eventBus = mock(LaravelEventBus::class);
+        $eventBus = mock(EventBus::class);
         $eventBus->shouldReceive('dispatch')
             ->once();
 
@@ -51,7 +51,7 @@ final class AccountCreatorTest extends TestCase
         );
 
         $repository = mock(AccountRepository::class);
-        $eventBus = mock(LaravelEventBus::class);
+        $eventBus = mock(EventBus::class);
 
         new AccountCreator($repository, $eventBus)($request);
     }
@@ -68,7 +68,7 @@ final class AccountCreatorTest extends TestCase
         );
 
         $repository = mock(AccountRepository::class);
-        $eventBus = mock(LaravelEventBus::class);
+        $eventBus = mock(EventBus::class);
 
         new AccountCreator($repository, $eventBus)($request);
     }
@@ -83,7 +83,7 @@ final class AccountCreatorTest extends TestCase
         $this->expectExceptionMessage('The uuid  is invalid.');
 
         $repository = mock(AccountRepository::class);
-        $eventBus = mock(LaravelEventBus::class);
+        $eventBus = mock(EventBus::class);
 
         new AccountCreator($repository, $eventBus)($request);
     }
@@ -98,7 +98,7 @@ final class AccountCreatorTest extends TestCase
         $this->expectExceptionMessage('The uuid  is invalid.');
 
         $repository = mock(AccountRepository::class);
-        $eventBus = mock(LaravelEventBus::class);
+        $eventBus = mock(EventBus::class);
 
         new AccountCreator($repository, $eventBus)($request);
     }
@@ -113,7 +113,7 @@ final class AccountCreatorTest extends TestCase
         $this->expectExceptionMessage("The account code can't be empty");
 
         $repository = mock(AccountRepository::class);
-        $eventBus = mock(LaravelEventBus::class);
+        $eventBus = mock(EventBus::class);
 
         new AccountCreator($repository, $eventBus)($request);
     }
