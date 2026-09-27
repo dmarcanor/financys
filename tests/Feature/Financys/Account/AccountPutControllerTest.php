@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types= 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Financys\Account;
 
@@ -15,17 +15,17 @@ final class AccountPutControllerTest extends TestCase
     use DatabaseTransactions;
 
     #[Override]
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->createUser();
     }
-    
+
     public function test_it_should_update_a_account_put_with_a_account_id(): void
     {
         $originalAccount = AccountMother::create(userId: $this->user->id);
         $modifiedAccount = AccountMother::create(
-            id: $originalAccount->id(), 
+            id: $originalAccount->id(),
             userId: $originalAccount->userId()
         );
 
@@ -39,14 +39,14 @@ final class AccountPutControllerTest extends TestCase
         ]);
 
         $response = $this
-            ->withHeader('Authorization',"Bearer {$this->token()}")
+            ->withHeader('Authorization', "Bearer {$this->token()}")
             ->put("api/account/{$originalAccount->id()}", [
                 'code' => $modifiedAccount->code(),
                 'name' => $modifiedAccount->name(),
             ]);
 
         $json = $response->json();
-        
+
         expect($json)->toHAveKeys(['error', 'body']);
         expect($json['error'])->toBe([]);
         expect($json['body'])->toBe([]);
@@ -57,19 +57,19 @@ final class AccountPutControllerTest extends TestCase
     {
         $originalAccount = AccountMother::create(userId: $this->user->id);
         $modifiedAccount = AccountMother::create(
-            id: $originalAccount->id(), 
+            id: $originalAccount->id(),
             userId: $originalAccount->userId()
         );
 
         $response = $this
-            ->withHeader('Authorization',"Bearer {$this->token()}")
+            ->withHeader('Authorization', "Bearer {$this->token()}")
             ->put("api/account/{$originalAccount->id()}", [
                 'code' => $modifiedAccount->code(),
                 'name' => $modifiedAccount->name(),
             ]);
 
         $json = $response->json();
-        
+
         expect($json)->toHAveKeys(['error', 'body']);
         expect($json['error'])->toBe(["Account with ID {$originalAccount->id()} not found."]);
         expect($json['body'])->toBe([]);
@@ -80,7 +80,7 @@ final class AccountPutControllerTest extends TestCase
     {
         $originalAccount = AccountMother::create(userId: $this->user->id);
         $modifiedAccount = AccountMother::create(
-            id: $originalAccount->id(), 
+            id: $originalAccount->id(),
             userId: $originalAccount->userId()
         );
 
@@ -97,14 +97,14 @@ final class AccountPutControllerTest extends TestCase
         $token = auth()->login($otherUser);
 
         $response = $this
-            ->withHeader('Authorization',"Bearer {$token}")
+            ->withHeader('Authorization', "Bearer {$token}")
             ->put("api/account/{$originalAccount->id()}", [
                 'code' => $modifiedAccount->code(),
                 'name' => $modifiedAccount->name(),
             ]);
 
         $json = $response->json();
-        
+
         expect($json)->toHAveKeys(['error', 'body']);
         expect($json['error'])->toBe(["Account with ID {$originalAccount->id()} not found."]);
         expect($json['body'])->toBe([]);
