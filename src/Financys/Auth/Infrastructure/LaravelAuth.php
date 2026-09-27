@@ -18,7 +18,7 @@ class LaravelAuth implements AuthenticationRepository
     {
         /**
          * @var string|false $token
-         */ 
+         */
         $token = Auth::attempt([
             'email' => $email,
             'password' => $password,
@@ -33,7 +33,7 @@ class LaravelAuth implements AuthenticationRepository
         return new Authentication(
             $token,
             self::TOKEN_TYPE,
-            (new DateTimeImmutable())->add(new DateInterval("PT{$expirationTimeInMinutes}M"))
+            (new DateTimeImmutable)->add(new DateInterval("PT{$expirationTimeInMinutes}M"))
         );
     }
 }
