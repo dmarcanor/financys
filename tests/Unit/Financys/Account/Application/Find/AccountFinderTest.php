@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Financys\Account\Application\Find;
 
 use Financys\Account\Application\Find\AccountFinder;
-use Financys\Account\Domain\AccountNotOwnedByUser;
 use Financys\Account\Domain\AccountNotFound;
+use Financys\Account\Domain\AccountNotOwnedByUser;
 use Financys\Account\Domain\AccountRepository;
 use Tests\TestCase;
 use Tests\Unit\Financys\Account\Domain\AccountMother;
