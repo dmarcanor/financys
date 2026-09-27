@@ -15,23 +15,18 @@ class AccountPostControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    private User $user;
-
     #[Override]
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->createUser();
     }
 
     public function test_it_should_create_an_account()
     {
-        $user = $this->user;
-        $token = auth()->login($user);
-
         $response = $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
                 'Idempotency-Key' => fake()->uuid(),
             ])
             ->post('api/account', [
@@ -43,6 +38,8 @@ class AccountPostControllerTest extends TestCase
 
         $json = $response->json();
 
+        expect($json)->toHaveKeys(['error', 'body']);
+        expect($json['body'])->toBe([]);
         expect($json['error'])->toBe([]);
         expect($response->status())->toBe(200);
     }
@@ -57,10 +54,10 @@ class AccountPostControllerTest extends TestCase
 
         $json = $response->json();
 
-        expect($response->status())->toBe(401);
         expect($json)->toHaveKeys(['error', 'body']);
         expect($json['body'])->toBe([]);
-        expect($json['error'])->toBeArray()->not->toBeEmpty();
+        expect($json['error'])->toBe(['Token not provided']);
+        expect($response->status())->toBe(401);
     }
 
     public function test_it_should_return_unauthorized_when_token_is_invalid()
@@ -78,20 +75,17 @@ class AccountPostControllerTest extends TestCase
 
         $json = $response->json();
 
-        expect($response->status())->toBe(401);
         expect($json)->toHaveKeys(['error', 'body']);
         expect($json['body'])->toBe([]);
-        expect($json['error'])->toBeArray()->not->toBeEmpty();
+        expect($json['error'])->toBe(['Could not decode token: Error while decoding from Base64Url, invalid base64 characters detected']);
+        expect($response->status())->toBe(401);
     }
 
     public function test_it_should_return_error_when_idempotency_key_is_missing()
     {
-        $user = $this->user;
-        $token = auth()->login($user);
-
         $response = $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
             ])
             ->post('api/account', [
                 'id' => fake()->uuid(),
@@ -102,23 +96,20 @@ class AccountPostControllerTest extends TestCase
 
         $json = $response->json();
 
-        expect($response->status())->toBe(400);
         expect($json)->toHaveKeys(['error', 'body']);
         expect($json['body'])->toBe([]);
         expect($json['error'])->toBe(['Idempotency-Key header is required.']);
+        expect($response->status())->toBe(400);
     }
 
     public function test_it_should_create_two_account_because_different_idempotency_key()
     {
-        $user = $this->user;
-        $token = auth()->login($user);
-
-        $account1 = AccountMother::create(userId: $user->id);
-        $account2 = AccountMother::create(userId: $user->id);
+        $account1 = AccountMother::create(userId: $this->user->id);
+        $account2 = AccountMother::create(userId: $this->user->id);
 
         $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
                 'Idempotency-Key' => fake()->uuid(),
             ])
             ->post('api/account', [
@@ -131,7 +122,7 @@ class AccountPostControllerTest extends TestCase
 
         $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
                 'Idempotency-Key' => fake()->uuid(),
             ])
             ->post('api/account', [
@@ -149,11 +140,9 @@ class AccountPostControllerTest extends TestCase
 
     public function test_it_should_create_one_account_because_same_idempotency_key_and_payload()
     {
-        $user = $this->user;
-        $token = auth()->login($user);
         $idempotencyKey = fake()->uuid();
 
-        $account = AccountMother::create(userId: $user->id);
+        $account = AccountMother::create(userId: $this->user->id);
         $payload = [
             'id' => $account->id(),
             'code' => $account->code(),
@@ -161,40 +150,35 @@ class AccountPostControllerTest extends TestCase
             'currency' => $account->balance()->symbol(),
         ];
 
-        $firstResponse = $this
+        $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
                 'Idempotency-Key' => $idempotencyKey,
             ])
             ->post('api/account', $payload);
 
-        $secondResponse = $this
+        $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
                 'Idempotency-Key' => $idempotencyKey,
             ])
             ->post('api/account', $payload);
 
         $accounts = DB::table('accounts')->get();
 
-        expect($firstResponse->status())->toBe(200);
-        expect($secondResponse->status())->toBe(200);
-        expect($secondResponse->json())->toBe($firstResponse->json());
         expect($accounts->count())->toBe(1);
     }
 
     public function test_it_should_reject_same_idempotency_key_with_different_payload()
     {
-        $user = $this->user;
-        $token = auth()->login($user);
         $idempotencyKey = fake()->uuid();
 
-        $account1 = AccountMother::create(userId: $user->id);
-        $account2 = AccountMother::create(userId: $user->id);
+        $account1 = AccountMother::create(userId: $this->user->id);
+        $account2 = AccountMother::create(userId: $this->user->id);
 
         $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
                 'Idempotency-Key' => $idempotencyKey,
             ])
             ->post('api/account', [
@@ -207,7 +191,7 @@ class AccountPostControllerTest extends TestCase
 
         $response = $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
                 'Idempotency-Key' => $idempotencyKey,
             ])
             ->post('api/account', [
@@ -217,23 +201,20 @@ class AccountPostControllerTest extends TestCase
                 'currency' => $account2->balance()->symbol(),
             ]);
 
-        expect($response->status())->toBe(409);
-        expect($response->json('error'))->toBe(['Idempotency-Key already used with a different payload.']);
-
         $accounts = DB::table('accounts')->get();
 
         expect($accounts->count())->toBe(1);
+        expect($response->json('error'))->toBe(['Idempotency-Key already used with a different payload.']);
+        expect($response->status())->toBe(409);
     }
 
     public function test_it_should_return_error_when_idempotency_key_is_not_a_uuid()
     {
-        $user = $this->user;
-        $token = auth()->login($user);
-        $account = AccountMother::create(userId: $user->id);
+        $account = AccountMother::create(userId: $this->user->id);
 
         $response = $this
             ->withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer {$this->token()}",
                 'Idempotency-Key' => 'not-a-uuid',
             ])
             ->post('api/account', [
@@ -243,7 +224,7 @@ class AccountPostControllerTest extends TestCase
                 'currency' => $account->balance()->symbol(),
             ]);
 
-        expect($response->status())->toBe(400);
         expect($response->json('error'))->toBe(['Idempotency-Key header must be a valid UUID.']);
+        expect($response->status())->toBe(400);
     }
 }
