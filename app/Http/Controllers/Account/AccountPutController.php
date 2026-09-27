@@ -1,16 +1,16 @@
 <?php
 
-declare(strict_types= 1);
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\ApiController;
 use Financys\Account\Application\Update\AccountUpdater;
 use Financys\Account\Application\Update\AccountUpdaterRequest;
-use Financys\Account\Domain\AccountNotOwnedByUser;
 use Financys\Account\Domain\AccountNotFound;
-use Illuminate\Http\Request;
+use Financys\Account\Domain\AccountNotOwnedByUser;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 final class AccountPutController extends ApiController
 {
@@ -23,7 +23,7 @@ final class AccountPutController extends ApiController
         return $this->validate(function () use ($id, $request) {
             $fields = $request->validate([
                 'code' => 'string|required',
-                'name'=> 'string|required',
+                'name' => 'string|required',
             ]);
 
             try {
