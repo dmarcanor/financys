@@ -76,7 +76,7 @@ final class AccountPutControllerTest extends TestCase
         expect($response->status())->toBe(404);
     }
 
-    public function test_it_should_return_response_unathorized_account(): void
+    public function test_it_should_return_not_found_for_an_account_owned_by_another_user(): void
     {
         $originalAccount = AccountMother::create(userId: $this->user->id);
         $modifiedAccount = AccountMother::create(
@@ -106,8 +106,8 @@ final class AccountPutControllerTest extends TestCase
         $json = $response->json();
         
         expect($json)->toHAveKeys(['error', 'body']);
-        expect($json['error'])->toBe(['You are not authorized to access this account.']);
+        expect($json['error'])->toBe(["Account with ID {$originalAccount->id()} not found."]);
         expect($json['body'])->toBe([]);
-        expect($response->status())->toBe(403);
+        expect($response->status())->toBe(404);
     }
 }

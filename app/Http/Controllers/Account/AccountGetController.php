@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\ApiController;
 use Financys\Account\Application\Find\AccountFinder;
 use Financys\Account\Application\Find\AccountFinderRequest;
+use Financys\Account\Domain\AccountNotOwnedByUser;
 use Financys\Account\Domain\AccountNotFound;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,15 +21,7 @@ class AccountGetController extends ApiController
     public function __invoke(Request $request, string $id): JsonResponse
     {
         try {
-            $account = ($this->accountFinder)(new AccountFinderRequest($id));
-
-            if ($request->user()->id !== $account->userId) {
-                return $this->formatResponse(
-                    [],
-                    ['You are not authorized to access this account.'],
-                    JsonResponse::HTTP_FORBIDDEN
-                );
-            }
+            $account = ($this->accountFinder)(new AccountFinderRequest($id, $request->user()->id));
 
             return $this->formatResponse(
                 [
@@ -42,10 +35,10 @@ class AccountGetController extends ApiController
                 [],
                 JsonResponse::HTTP_OK
             );
-        } catch (AccountNotFound $e) {
+        } catch (AccountNotFound|AccountNotOwnedByUser) {
             return $this->formatResponse(
                 [],
-                [$e->getMessage()],
+                [sprintf('Account with ID %s not found.', $id)],
                 JsonResponse::HTTP_NOT_FOUND
             );
         }

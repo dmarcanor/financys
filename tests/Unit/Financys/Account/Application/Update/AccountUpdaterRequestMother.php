@@ -12,12 +12,14 @@ final class AccountUpdaterRequestMother
         ?string $id = null,
         ?string $code = null,
         ?string $name = null,
+        ?string $requestingUserId = null,
     ): AccountUpdaterRequest
     {
         return new AccountUpdaterRequest(
             $id ?? fake()->uuid(),
             $code ?? fake()->name(),
             $name ?? fake()->name(),
+            $requestingUserId ?? fake()->uuid(),
         );
     }
 }

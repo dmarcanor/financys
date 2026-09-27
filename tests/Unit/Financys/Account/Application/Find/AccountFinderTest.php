@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Financys\Account\Application\Find;
 
 use Financys\Account\Application\Find\AccountFinder;
+use Financys\Account\Domain\AccountNotOwnedByUser;
 use Financys\Account\Domain\AccountNotFound;
 use Financys\Account\Domain\AccountRepository;
 use Tests\TestCase;
@@ -15,7 +16,7 @@ final class AccountFinderTest extends TestCase
     public function test_it_should_find_an_existing_account(): void
     {
         $request = AccountFinderRequestMother::create();
-        $account = AccountMother::create(id: $request->id);
+        $account = AccountMother::create(id: $request->id, userId: $request->requestingUserId);
         $expectedResponse = AccountFinderResponseMother::create(
             $account->id(),
             $account->userId(),
@@ -50,6 +51,22 @@ final class AccountFinderTest extends TestCase
         $this->expectExceptionMessage(
             sprintf('Account with ID %s not found.', $request->id)
         );
+
+        new AccountFinder($repository)($request);
+    }
+
+    public function test_it_should_throw_when_account_is_not_owned_by_requesting_user(): void
+    {
+        $request = AccountFinderRequestMother::create();
+        $account = AccountMother::create(id: $request->id);
+
+        $repository = mock(AccountRepository::class);
+        $repository->shouldReceive('find')
+            ->once()
+            ->with($request->id)
+            ->andReturn($account);
+
+        $this->expectException(AccountNotOwnedByUser::class);
 
         new AccountFinder($repository)($request);
     }

@@ -10,9 +10,11 @@ final class AccountFinderRequestMother
 {
     public static function create(
         ?string $id = null,
+        ?string $requestingUserId = null,
     ): AccountFinderRequest {
         return new AccountFinderRequest(
             $id ?? fake()->uuid,
+            $requestingUserId ?? fake()->uuid,
         );
     }
 }
