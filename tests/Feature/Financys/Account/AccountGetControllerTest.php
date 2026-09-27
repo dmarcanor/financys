@@ -15,7 +15,7 @@ final class AccountGetControllerTest extends TestCase
     use DatabaseTransactions;
 
     #[Override]
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->createUser();
