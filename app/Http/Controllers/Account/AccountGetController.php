@@ -7,8 +7,8 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\ApiController;
 use Financys\Account\Application\Find\AccountFinder;
 use Financys\Account\Application\Find\AccountFinderRequest;
-use Financys\Account\Domain\AccountNotOwnedByUser;
 use Financys\Account\Domain\AccountNotFound;
+use Financys\Account\Domain\AccountNotOwnedByUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
