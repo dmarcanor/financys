@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Financys\Account;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Override;
@@ -16,7 +15,7 @@ class AccountPostControllerTest extends TestCase
     use DatabaseTransactions;
 
     #[Override]
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->createUser();
