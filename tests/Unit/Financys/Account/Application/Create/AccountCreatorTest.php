@@ -36,7 +36,7 @@ final class AccountCreatorTest extends TestCase
         $eventBus->shouldReceive('dispatch')
             ->once();
 
-        (new AccountCreator($repository, $eventBus))($request);
+        new AccountCreator($repository, $eventBus)($request);
     }
 
     public function test_it_should_throw_invalid_symbol_error(): void
@@ -53,7 +53,7 @@ final class AccountCreatorTest extends TestCase
         $repository = mock(AccountRepository::class);
         $eventBus = mock(LaravelEventBus::class);
 
-        (new AccountCreator($repository, $eventBus))($request);
+        new AccountCreator($repository, $eventBus)($request);
     }
 
     public function test_it_should_throw_empty_name_exception(): void
@@ -70,7 +70,7 @@ final class AccountCreatorTest extends TestCase
         $repository = mock(AccountRepository::class);
         $eventBus = mock(LaravelEventBus::class);
 
-        (new AccountCreator($repository, $eventBus))($request);
+        new AccountCreator($repository, $eventBus)($request);
     }
 
     public function test_it_should_throw_invalid_uuid_exception_when_id_is_empty(): void
@@ -85,7 +85,7 @@ final class AccountCreatorTest extends TestCase
         $repository = mock(AccountRepository::class);
         $eventBus = mock(LaravelEventBus::class);
 
-        (new AccountCreator($repository, $eventBus))($request);
+        new AccountCreator($repository, $eventBus)($request);
     }
 
     public function test_it_should_throw_invalid_uuid_exception_when_user_id_is_empty(): void
@@ -100,7 +100,7 @@ final class AccountCreatorTest extends TestCase
         $repository = mock(AccountRepository::class);
         $eventBus = mock(LaravelEventBus::class);
 
-        (new AccountCreator($repository, $eventBus))($request);
+        new AccountCreator($repository, $eventBus)($request);
     }
 
     public function test_it_should_throw_empty_code_exception(): void
@@ -115,6 +115,6 @@ final class AccountCreatorTest extends TestCase
         $repository = mock(AccountRepository::class);
         $eventBus = mock(LaravelEventBus::class);
 
-        (new AccountCreator($repository, $eventBus))($request);
+        new AccountCreator($repository, $eventBus)($request);
     }
 }

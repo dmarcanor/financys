@@ -31,7 +31,7 @@ final class AccountFinderTest extends TestCase
             ->with($request->id)
             ->andReturn($account);
 
-        $response = (new AccountFinder($repository))($request);
+        $response = new AccountFinder($repository)($request);
 
         expect($response)->toEqual($expectedResponse);
     }
@@ -51,6 +51,6 @@ final class AccountFinderTest extends TestCase
             sprintf('Account with ID %s not found.', $request->id)
         );
 
-        (new AccountFinder($repository))($request);
+        new AccountFinder($repository)($request);
     }
 }
