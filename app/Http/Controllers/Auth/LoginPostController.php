@@ -11,8 +11,7 @@ use Illuminate\Http\Request;
 
 class LoginPostController extends ApiController
 {
-    public function __construct(private Authenticator $authenticator)
-    {}
+    public function __construct(private Authenticator $authenticator) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -24,19 +23,19 @@ class LoginPostController extends ApiController
 
             try {
                 $response = ($this->authenticator)(new AuthenticatorRequest(
-                    $credentials['email'], 
+                    $credentials['email'],
                     $credentials['password']
                 ));
 
                 return $this->formatResponse(
-                [
-                    'access_token' => $response->token,
-                    'token_type' => $response->type,
-                    'expires_at' => $response->expiresAt,
-                ],
-                [],
-                JsonResponse::HTTP_OK
-            );
+                    [
+                        'access_token' => $response->token,
+                        'token_type' => $response->type,
+                        'expires_at' => $response->expiresAt,
+                    ],
+                    [],
+                    JsonResponse::HTTP_OK
+                );
             } catch (FailedAuthenticationException $e) {
                 return $this->formatResponse(
                     [],
