@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types= 1);
+declare(strict_types=1);
 
 namespace Financys\Auth\Domain;
 
@@ -10,6 +10,6 @@ class FailedAuthenticationException extends InvalidArgumentException
 {
     public function __construct()
     {
-        parent::__construct("Unauthorized");
+        parent::__construct('Unauthorized');
     }
 }
