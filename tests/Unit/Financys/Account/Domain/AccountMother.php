@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Financys\Account\Domain;
 
 use Financys\Account\Domain\Account;
-use Financys\Account\Domain\AccountBalance;
 use Financys\Account\Domain\AccountCode;
 use Financys\Account\Domain\AccountName;
 use Shared\Domain\Symbols;
