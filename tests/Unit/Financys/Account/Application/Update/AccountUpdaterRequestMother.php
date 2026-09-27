@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types= 1);
+declare(strict_types=1);
 
 namespace Tests\Unit\Financys\Account\Application\Update;
 
@@ -13,8 +13,7 @@ final class AccountUpdaterRequestMother
         ?string $code = null,
         ?string $name = null,
         ?string $requestingUserId = null,
-    ): AccountUpdaterRequest
-    {
+    ): AccountUpdaterRequest {
         return new AccountUpdaterRequest(
             $id ?? fake()->uuid(),
             $code ?? fake()->name(),
