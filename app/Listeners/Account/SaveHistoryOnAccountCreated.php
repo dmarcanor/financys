@@ -23,6 +23,6 @@ class SaveHistoryOnAccountCreated implements ShouldQueue
      */
     public function handle(AccountCreated $event): void
     {
-        Log::info('SaveHistoryOnAccountCreated GG: ' . serialize($event->event->payload()));
+        Log::info('SaveHistoryOnAccountCreated GG: '.serialize($event->event->payload()));
     }
 }
